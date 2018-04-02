@@ -1,0 +1,32 @@
+version: '2'
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - php:php
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    volumes_from:
+      - php
+
+  php:
+    image: ligamanager/php
+    volumes:
+      - ./config/jwt:/var/www/config/jwt
+    links:
+      - mariadb:mariadb
+    env_file:
+      - ./api/.env
+
+  ui: 
+    image: ligamanager/ui:prod
+  
+  mariadb:
+    image: mariadb
+    ports:
+      - "3306:3306"
+    env_file:
+      - ./api/.env
