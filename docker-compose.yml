@@ -1,28 +1,26 @@
 version: '2'
 services:
-  nginx:
-    image: nginx:alpine
+  ui:
+    image: robertkitzing/liga-manager-ui
     ports:
       - "80:80"
       - "443:443"
     links:
-      - php:php
+      - api:api
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     volumes_from:
-      - php
+      - api
 
-  php:
-    image: ligamanager/php
+  api:
+    image: mklocke/liga-manager-api
     volumes:
+      - /var/www/api
       - ./config/jwt:/var/www/config/jwt
     links:
       - mariadb:mariadb
     env_file:
       - ./api/.env
-
-  ui: 
-    image: ligamanager/ui:prod
   
   mariadb:
     image: mariadb
