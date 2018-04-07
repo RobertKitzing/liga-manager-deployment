@@ -28,3 +28,8 @@ services:
       - "3306:3306"
     env_file:
       - ./api/.env
+
+  websocket:
+    image: robertkitzing/liga-manager-websocket
+    ports:
+      - "9898:9898"
