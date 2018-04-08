@@ -33,4 +33,4 @@ services:
   websocket:
     image: robertkitzing/liga-manager-websocket
     volumes:
-      - /etc/letsencrypt/live/wildeligabremen.de/:/cert
+      - /etc/letsencrypt/live/wildeligabremen.de:/cert
