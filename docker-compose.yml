@@ -24,8 +24,8 @@ services:
   
   mariadb:
     image: mariadb
-    ports:
-      - "3306:3306"
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
     env_file:
       - ./api/.env
 
