@@ -32,7 +32,5 @@ services:
 
   websocket:
     image: robertkitzing/liga-manager-websocket
-    ports:
-      - "9898:9898"
     volumes:
       - /etc/letsencrypt/live/wildeligabremen.de/:/cert
