@@ -16,7 +16,7 @@ services:
     image: mklocke/liga-manager-api
     volumes:
       - /var/www/api
-      - ./config/jwt:/var/www/config/jwt
+      - ./config/jwt:/var/www/api/config/jwt
     links:
       - mariadb:mariadb
     env_file:
@@ -24,8 +24,8 @@ services:
   
   mariadb:
     image: mariadb
-    ports:
-      - "3306:3306"
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
     env_file:
       - ./api/.env
 
@@ -33,5 +33,8 @@ services:
     image: robertkitzing/liga-manager-websocket
     ports:
       - "9898:9898"
+<<<<<<< HEAD
     volumes:
       - "/etc/letsencrypt/live/wildeligabremen.de/:/cert"
+=======
+>>>>>>> f39fe41b4b5955ee4d3393816a07f7e5805ddb89
