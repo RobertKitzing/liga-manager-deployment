@@ -16,7 +16,7 @@ services:
     image: mklocke/liga-manager-api
     volumes:
       - /var/www/api
-      - ./config/jwt:/var/www/config/jwt
+      - ./config/jwt:/var/www/api/config/jwt
     links:
       - mariadb:mariadb
     env_file:
