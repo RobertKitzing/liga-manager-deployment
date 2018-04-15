@@ -1,7 +1,7 @@
 version: '2'
 services:
   ui:
-    image: robertkitzing/liga-manager-ui:0.2
+    image: robertkitzing/liga-manager-ui:0.2.1
   api:
     image: mklocke/liga-manager-api:0.1.0
     volumes:
@@ -9,6 +9,9 @@ services:
       - /etc/jwt:/etc/jwt
     links:
       - mariadb:mariadb
+    depends_on:
+      - mariadb
+      - postfix
     env_file:
       - ./api/.env 
   mariadb:
@@ -20,7 +23,7 @@ services:
     env_file:
       - ./api/.env
   websocket:
-    image: robertkitzing/liga-manager-websocket
+    image: robertkitzing/liga-manager-websocket:0.1
     volumes:
       - /etc/letsencrypt/live/wildeligabremen.de:/cert
   nginx:
@@ -35,6 +38,8 @@ services:
       - ui
       - api
     depends_on:
+      - ui
+      - api
       - websocket
   postfix:
     image: tozd/postfix
