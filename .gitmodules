@@ -1,6 +1,0 @@
-[submodule "api"]
-	path = api
-	url = git@github.com:mariusklocke/liga-manager-api.git
-[submodule "ui"]
-	path = ui
-	url = git@github.com:RobertKitzing/LigaManagerUI.git
