@@ -7,8 +7,6 @@ services:
     volumes:
       - /var/www/api
       - /etc/jwt:/etc/jwt
-    links:
-      - mariadb:mariadb
     depends_on:
       - mariadb
       - postfix
@@ -37,10 +35,12 @@ services:
     volumes_from:
       - ui
       - api
+      - cms
     depends_on:
       - ui
       - api
       - websocket
+      - cms
   postfix:
     image: tozd/postfix
     volumes:
@@ -48,3 +48,13 @@ services:
     environment:
       - MY_NETWORKS=172.18.0.0/16
       - MAILNAME=wildeligabremen.de
+  cms:
+    image: wordpress:4.9.6-php7.2-fpm-alpine
+    volumes:
+      - ./volumes/wp-files:/var/www/html
+    environment:
+      - WORDPRESS_DB_HOST=mariadb:3306
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=g23s4hKsp1Vf8E
+    depends_on:
+      - mariadb
