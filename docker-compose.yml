@@ -11,7 +11,7 @@ services:
       - mariadb
       - postfix
     env_file:
-      - ./api/.env 
+      - ./api.env 
   mariadb:
     image: mariadb
     ports:
@@ -19,7 +19,7 @@ services:
     volumes:
       - /var/lib/mysql:/var/lib/mysql
     env_file:
-      - ./api/.env
+      - ./api.env
   websocket:
     image: robertkitzing/liga-manager-websocket:0.1
     volumes:
@@ -52,9 +52,7 @@ services:
     image: wordpress:4.9.6-php7.2-fpm-alpine
     volumes:
       - ./volumes/wp-files:/var/www/html
-    environment:
-      - WORDPRESS_DB_HOST=mariadb:3306
-      - WORDPRESS_DB_USER=wordpress
-      - WORDPRESS_DB_PASSWORD=g23s4hKsp1Vf8E
+    env_file:
+      - ./wordpress.env
     depends_on:
       - mariadb
