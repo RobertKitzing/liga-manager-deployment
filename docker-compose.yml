@@ -3,29 +3,28 @@ services:
   ui:
     image: robertkitzing/liga-manager-ui:0.4
   api:
-    image: mklocke/liga-manager-api:0.2.0
+    image: mklocke/liga-manager-api:0.3.0
     volumes:
       - /var/www/api
       - /etc/jwt:/etc/jwt
     depends_on:
       - mariadb
       - postfix
+      - redis
     env_file:
       - ./api.env 
   mariadb:
-    image: mariadb
+    image: mariadb:10.3.7
     ports:
       - "3306:3306"
     volumes:
       - /var/lib/mysql:/var/lib/mysql
-    env_file:
-      - ./api.env
   websocket:
     image: robertkitzing/liga-manager-websocket:0.1
     volumes:
       - /etc/letsencrypt/live/wildeligabremen.de:/cert
   nginx:
-    image: nginx:latest
+    image: nginx:stable-alpine
     ports:
       - "80:80"
       - "443:443"
@@ -56,3 +55,7 @@ services:
       - ./wordpress.env
     depends_on:
       - mariadb
+  redis:
+    image: redis:4-alpine
+    ports:
+      - "6379:6379"
