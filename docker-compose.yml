@@ -16,7 +16,7 @@ services:
   mariadb:
     image: mariadb:10.3.7
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - /var/lib/mysql:/var/lib/mysql
   websocket:
@@ -58,4 +58,4 @@ services:
   redis:
     image: redis:4-alpine
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
