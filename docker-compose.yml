@@ -1,9 +1,9 @@
 version: '2'
 services:
   ui:
-    image: robertkitzing/liga-manager-ui:2.0
+    image: robertkitzing/liga-manager-ui:3.0.0-57
   api:
-    image: mklocke/liga-manager-api:0.4.0
+    image: mklocke/liga-manager-api:0.5.0
     volumes:
       - /var/www/api
       - /etc/jwt:/etc/jwt
