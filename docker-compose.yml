@@ -1,12 +1,13 @@
 version: '2'
 services:
   ui:
-    image: robertkitzing/liga-manager-ui:3.0.4-152
+    image: robertkitzing/liga-manager-ui:3.0.4-156
   api:
-    image: mklocke/liga-manager-api:0.7.1
+    image: mklocke/liga-manager-api:0.7.2
+    user: www-data
     volumes:
       - /var/www/api
-      - /etc/jwt:/etc/jwt
+      - ./volumes/jwt:/var/www/jwt
     depends_on:
       - mariadb
       - postfix
