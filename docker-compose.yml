@@ -3,7 +3,7 @@ services:
   ui:
     image: robertkitzing/liga-manager-ui:3.0.4-156
   api:
-    image: mklocke/liga-manager-api:0.7.2
+    image: mklocke/liga-manager-api:1.0.0
     user: www-data
     volumes:
       - api-public:/var/www/api/public
