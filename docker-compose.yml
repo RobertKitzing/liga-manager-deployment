@@ -1,13 +1,14 @@
 version: '3'
 services:
   ui:
-    image: robertkitzing/liga-manager-ui:3.0.4-156
+    image: robertkitzing/liga-manager-ui:4.0.0-186
+    env_file:
+      - ./ui.env
   api:
-    image: mklocke/liga-manager-api:1.0.2
+    image: mklocke/liga-manager-api:1.0.4
     user: www-data
     volumes:
       - api-public:/var/www/api/public
-      - ./volumes/jwt:/var/www/jwt
     depends_on:
       - mariadb
       - postfix
