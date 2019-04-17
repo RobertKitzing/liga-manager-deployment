@@ -1,7 +1,7 @@
 version: '3'
 services:
   ui:
-    image: robertkitzing/liga-manager-ui:4.0.0-186
+    image: robertkitzing/liga-manager-ui:4.0.0-188
     env_file:
       - ./ui.env
   api:
