@@ -1,17 +1,16 @@
 version: '3'
 services:
   ui:
-    image: robertkitzing/liga-manager-ui:4.0.0-190
+    image: robertkitzing/liga-manager-ui:4.0.0-191
     env_file:
       - ./ui.env
   api:
-    image: mklocke/liga-manager-api:1.0.5
+    image: mklocke/liga-manager-api:1.0.7
     user: www-data
     volumes:
       - api-public:/var/www/api/public
     depends_on:
       - mariadb
-      - postfix
       - redis
     env_file:
       - ./api.env 
@@ -41,13 +40,6 @@ services:
     volumes:
       - certbot-webroot:/var/www/certbot
       - ./volumes/letsencrypt:/etc/letsencrypt
-  postfix:
-    image: tozd/postfix
-    volumes:
-      - ./volumes/postfix:/var/spool/postfix
-    environment:
-      - MY_NETWORKS=172.18.0.0/16
-      - MAILNAME=wildeligabremen.de
   cms:
     image: wordpress:4.9.6-php7.2-fpm-alpine
     volumes:
