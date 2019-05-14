@@ -35,7 +35,7 @@ services:
       - api
       - cms
   cms:
-    image: wordpress:4.9.6-php7.2-fpm-alpine
+    image: wordpress:5.2-php7.3-fpm-alpine
     volumes:
       - ./volumes/wp-files:/var/www/html
     env_file:
