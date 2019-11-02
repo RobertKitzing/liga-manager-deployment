@@ -5,10 +5,11 @@ services:
     env_file:
       - ./ui.env
   api:
-    image: mklocke/liga-manager-api:1.0.7
+    image: mklocke/liga-manager-api:1.1.0
     user: www-data
     volumes:
       - api-public:/var/www/api/public
+      - ./import:/var/www/api/import
     depends_on:
       - mariadb
       - redis
