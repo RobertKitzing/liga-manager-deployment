@@ -5,7 +5,7 @@ services:
     env_file:
       - ./ui.env
   api:
-    image: mklocke/liga-manager-api:1.5.1
+    image: mklocke/liga-manager-api:1.5.3
     user: www-data
     volumes:
       - ./import:/var/www/api/import
