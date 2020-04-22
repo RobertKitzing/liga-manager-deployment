@@ -15,11 +15,11 @@ services:
     env_file:
       - ./api.env 
   mariadb:
-    image: mariadb:10.3.12
+    image: mariadb:10.4
     ports:
       - "127.0.0.1:3306:3306"
     volumes:
-      - ./volumes/mysql:/var/lib/mysql
+      - mariadb:/var/lib/mysql
   nginx:
     image: nginx:stable-alpine
     ports:
@@ -46,3 +46,5 @@ services:
     ports:
       - "127.0.0.1:6379:6379"
 
+volumes:
+  mariadb:
