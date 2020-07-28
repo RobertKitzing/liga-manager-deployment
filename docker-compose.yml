@@ -5,7 +5,7 @@ services:
     env_file:
       - ./ui.env
   api:
-    image: mklocke/liga-manager-api:1.5.3
+    image: mklocke/liga-manager-api:1.6.2
     user: www-data
     volumes:
       - ./import:/var/www/api/import
@@ -42,7 +42,7 @@ services:
     depends_on:
       - mariadb
   redis:
-    image: redis:4-alpine
+    image: redis:5-alpine
     ports:
       - "127.0.0.1:6379:6379"
 
