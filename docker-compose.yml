@@ -1,7 +1,7 @@
 version: '3'
 services:
   ui:
-    image: robertkitzing/liga-manager-ui:4.0.0-191
+    image: robertkitzing/liga-manager-ui:latest
     env_file:
       - ./ui.env
   api:
@@ -34,7 +34,7 @@ services:
       - api
       - cms
   cms:
-    image: wordpress:5.2-php7.3-fpm-alpine
+    image: wordpress:5.5-php7.4-fpm-alpine
     volumes:
       - ./volumes/wp-files:/var/www/html
     env_file:
