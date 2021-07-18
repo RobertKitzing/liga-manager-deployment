@@ -2,10 +2,12 @@ version: '3'
 services:
   ui:
     image: robertkitzing/liga-manager-ui:latest
+    restart: unless-stopped
     env_file:
       - ./ui.env
   api:
-    image: mklocke/liga-manager-api:1.6.2
+    image: mklocke/liga-manager-api:1.7.3
+    restart: unless-stopped
     user: www-data
     volumes:
       - ./import:/var/www/api/import
@@ -16,12 +18,14 @@ services:
       - ./api.env 
   mariadb:
     image: mariadb:10.4
+    restart: unless-stopped
     ports:
       - "127.0.0.1:3306:3306"
     volumes:
       - mariadb:/var/lib/mysql
   nginx:
     image: nginx:stable-alpine
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -35,6 +39,7 @@ services:
       - cms
   cms:
     image: wordpress:5.5-php7.4-fpm-alpine
+    restart: unless-stopped
     volumes:
       - ./volumes/wp-files:/var/www/html
     env_file:
@@ -43,6 +48,7 @@ services:
       - mariadb
   redis:
     image: redis:5-alpine
+    restart: unless-stopped
     ports:
       - "127.0.0.1:6379:6379"
 
