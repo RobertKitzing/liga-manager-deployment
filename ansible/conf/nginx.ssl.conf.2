@@ -1,0 +1,7 @@
+ssl_certificate /etc/letsencrypt/live/{{ ssl_domain }}/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/{{ ssl_domain }}/privkey.pem;
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_prefer_server_ciphers on;
+ssl_ciphers ECDH+AESGCM:ECDH+AES256:ECDH+AES128:DHE+AES128:!ADH:!AECDH:!MD5;
+
+add_header Strict-Transport-Security "max-age=86400" always;

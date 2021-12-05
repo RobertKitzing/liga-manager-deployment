@@ -1,0 +1,5 @@
+---
+app_basedir: "/opt/liga-manager"
+backup_dir: "/var/backups/docker"
+docker_users: ['marius']
+sys_packages: [ 'containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'docker-compose', 'git', 'ufw', 'vim']

@@ -1,0 +1,13 @@
+CREATE DATABASE IF NOT EXISTS lima;
+CREATE USER IF NOT EXISTS {{lima_db_user}}@'%' IDENTIFIED BY '{{lima_db_password}}';
+GRANT ALL PRIVILEGES ON lima.* TO {{lima_db_user}}@'%';
+
+CREATE DATABASE IF NOT EXISTS wordpress;
+CREATE USER IF NOT EXISTS {{wordpress_db_user}}@'%' IDENTIFIED BY '{{wordpress_db_password}}';
+GRANT ALL PRIVILEGES ON wordpress.* TO {{wordpress_db_user}}@'%';
+
+CREATE USER IF NOT EXISTS {{readonly_db_user}}@'%' IDENTIFIED BY '{{readonly_db_password}}';
+GRANT SELECT ON lima.* TO {{readonly_db_user}}@'%';
+GRANT SELECT ON wordpress.* TO {{readonly_db_user}}@'%';
+
+FLUSH PRIVILEGES;

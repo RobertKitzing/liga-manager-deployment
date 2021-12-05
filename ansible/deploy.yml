@@ -1,0 +1,66 @@
+- hosts: gcp
+  become: true
+  vars_files:
+    - vars/default.yml
+    - vars/production.yml
+
+  tasks:
+    - name: Ensure application basedir is present
+      file:
+        path: "{{ app_basedir }}"
+        state: directory
+
+    - name: Ensure backup dir is present
+      file:
+        path: "{{ backup_dir }}"
+        state: directory
+
+    - name: Check if docker-compose.yml exists
+      stat:
+        path: "{{ app_basedir }}/docker-compose.yml"
+      register: docker_compose_yml
+
+    - name: Remove running containers
+      docker_compose:
+        project_src: "{{ app_basedir }}"
+        state: absent
+      when: docker_compose_yml.stat.exists
+
+    - name: Update config files
+      template:
+        src: "conf/{{ item }}.j2"
+        dest: "{{ app_basedir }}/{{ item }}"
+        owner: root
+        group: docker
+        mode: '0640'
+      with_items:
+        - docker-compose.yml
+        - nginx.conf
+        - api.env
+        - mariadb.env
+        - ui.env
+        - wordpress.env
+
+    - name: Update setup.sql
+      template:
+        src: conf/setup.sql.j2
+        dest: "{{ app_basedir }}/setup.sql"
+        owner: root
+        group: docker
+        mode: '0644'
+
+    - name: Create and start new containers
+      docker_compose:
+        project_src: "{{ app_basedir }}"
+        pull: yes
+
+    - name: Configure daily cronjobs
+      template:
+        src: "cron/{{ item }}.sh.j2"
+        dest: "/etc/cron.daily/{{ item }}"
+        owner: root
+        group: docker
+        mode: '0750'
+      with_items:
+        - certbot-renew
+        - backup
