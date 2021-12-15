@@ -11,8 +11,16 @@ server {
     listen 443 ssl http2;
     server_name {{ ssl_domain }};
     
-    {% include 'conf/nginx.ssl.conf.j2' %}
-    {% include 'conf/nginx.gzip.conf.j2' %}
+    ssl_certificate /etc/letsencrypt/live/{{ ssl_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ ssl_domain }}/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers ECDH+AESGCM:ECDH+AES256:ECDH+AES128:DHE+AES128:!ADH:!AECDH:!MD5;
+
+    add_header Strict-Transport-Security "max-age=86400" always;
+
+    gzip on;
+    gzip_types application/json application/javascript image/png application/font-woff2 image/x-icon;
 
     location /ws {
         proxy_pass http://ui:3098/ws;

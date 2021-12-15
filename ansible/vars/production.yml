@@ -7,7 +7,7 @@ jwt_secret: ffff
 lima_db_user: lima
 lima_db_password: aaaa
 mysql_root_password: bbbb
-ssl_domain: wltest.hopto.org
+ssl_domain: wltest.mklocke.de
 ssl_webmaster: webmaster@gmail.com
 readonly_db_user: readonly
 readonly_db_password: dddd
