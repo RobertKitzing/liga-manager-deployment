@@ -1,7 +1,7 @@
 ---
 app_basedir: "/opt/liga-manager"
 docker_users: ['marius']
-sys_packages: [ 'containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'docker-compose', 'git', 'ufw', 'vim']
+sys_packages: [ 'containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'git', 'ufw', 'vim']
 versions:
   api: 1.10.0
   mariadb: 10.6

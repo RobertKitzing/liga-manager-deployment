@@ -13,7 +13,9 @@
     - name: Make sure users are present
       user:
         name: "{{ item }}"
+        shell: /bin/bash
         groups: docker
+        append: yes
       with_items: "{{ docker_users }}"
 
     - name: Disable password authentication for root
@@ -38,3 +40,15 @@
 
     - name: Install packages
       apt: name={{ sys_packages }} state=latest
+
+    - name: Make sure docker plugin path exists
+      file:
+        path: /usr/local/lib/docker/cli-plugins
+        state: directory
+        mode: "0755"
+
+    - name: Download docker-compose as plugin from GitHub
+      get_url:
+        url: https://github.com/docker/compose/releases/download/v2.2.2/docker-compose-linux-x86_64
+        dest: /usr/local/lib/docker/cli-plugins/docker-compose
+        mode: "0755"

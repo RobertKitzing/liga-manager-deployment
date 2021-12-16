@@ -16,9 +16,9 @@
       register: docker_compose_yml
 
     - name: Remove running containers
-      docker_compose:
-        project_src: "{{ app_basedir }}"
-        state: absent
+      command: docker compose down
+      args:
+        chdir: "{{ app_basedir }}"
       when: docker_compose_yml.stat.exists
 
     - name: Update setup.sql
@@ -52,10 +52,15 @@
         - ui.env
         - wordpress.env
 
-    - name: Create and start new containers
-      docker_compose:
-        project_src: "{{ app_basedir }}"
-        pull: yes
+    - name: Pull container images
+      command: docker compose pull
+      args:
+        chdir: "{{ app_basedir }}"
+
+    - name: Create containers
+      command: docker compose up -d
+      args:
+        chdir: "{{ app_basedir }}"
 
     - name: Configure daily cronjobs
       template:
