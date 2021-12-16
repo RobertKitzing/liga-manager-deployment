@@ -10,11 +10,10 @@
         name: docker
         state: present
 
-    - name: Add users to 'docker' group
+    - name: Make sure users are present
       user:
         name: "{{ item }}"
         groups: docker
-        append: yes
       with_items: "{{ docker_users }}"
 
     - name: Disable password authentication for root
@@ -39,9 +38,3 @@
 
     - name: Install packages
       apt: name={{ sys_packages }} state=latest
-
-    - name: Obtain letsencrypt certicate using certbot
-      command: "docker run -v /etc/letsencrypt:/etc/letsencrypt -p 80:80 certbot/certbot certonly --standalone -n -d {{ ssl_domain }} -m {{ ssl_webmaster }} --agree-tos"
-      register: certbot
-
-    - debug: var=certbot

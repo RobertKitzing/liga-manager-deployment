@@ -21,6 +21,22 @@
         state: absent
       when: docker_compose_yml.stat.exists
 
+    - name: Update setup.sql
+      template:
+        src: conf/setup.sql.j2
+        dest: "{{ app_basedir }}/setup.sql"
+        owner: root
+        group: docker
+        mode: '0644'
+
+    - name: Update certbot-create.sh
+      template:
+        src: scripts/certbot-create.sh.j2
+        dest: "{{ app_basedir }}/certbot-create.sh"
+        owner: root
+        group: docker
+        mode: '0755'
+
     - name: Update config files
       template:
         src: "conf/{{ item }}.j2"
@@ -36,14 +52,6 @@
         - ui.env
         - wordpress.env
 
-    - name: Update setup.sql
-      template:
-        src: conf/setup.sql.j2
-        dest: "{{ app_basedir }}/setup.sql"
-        owner: root
-        group: docker
-        mode: '0644'
-
     - name: Create and start new containers
       docker_compose:
         project_src: "{{ app_basedir }}"
@@ -51,7 +59,7 @@
 
     - name: Configure daily cronjobs
       template:
-        src: "cron/{{ item }}.sh.j2"
+        src: "scripts/{{ item }}.sh.j2"
         dest: "/etc/cron.daily/{{ item }}"
         owner: root
         group: docker

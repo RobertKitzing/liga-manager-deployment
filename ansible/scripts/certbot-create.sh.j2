@@ -1,0 +1,7 @@
+#!/bin/sh
+
+apk add certbot certbot-nginx
+
+if [ ! -d '/etc/letsencrypt/live/{{ ssl_domain }}' ]; then
+  certbot certonly --standalone -n -d {{ ssl_domain }} -m {{ ssl_webmaster }} --agree-tos
+fi
