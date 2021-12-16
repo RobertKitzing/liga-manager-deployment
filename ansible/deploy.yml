@@ -10,11 +10,6 @@
         path: "{{ app_basedir }}"
         state: directory
 
-    - name: Ensure backup dir is present
-      file:
-        path: "{{ backup_dir }}"
-        state: directory
-
     - name: Check if docker-compose.yml exists
       stat:
         path: "{{ app_basedir }}/docker-compose.yml"

@@ -21,7 +21,7 @@ services:
       - "127.0.0.1:3306:3306"
     volumes:
       - mariadb:/var/lib/mysql
-      - /var/backups/docker:/backup
+      - backups:/backup
       - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
     env_file:
       - ./mariadb.env
@@ -44,7 +44,7 @@ services:
     restart: unless-stopped
     volumes:
       - wp-files:/var/www/html
-      - /var/backups/docker:/backup
+      - backups:/backup
     env_file:
       - ./wordpress.env
     depends_on:
@@ -58,3 +58,4 @@ services:
 volumes:
   mariadb:
   wp-files:
+  backups:
