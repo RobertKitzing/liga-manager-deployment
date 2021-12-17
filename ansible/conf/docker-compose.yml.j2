@@ -24,6 +24,8 @@ services:
       - backups:/backup
       - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
       - ./my.cnf:/root/.my.cnf:ro
+    environment:
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
   nginx:
     image: nginx:{{versions.nginx}}
     restart: unless-stopped
