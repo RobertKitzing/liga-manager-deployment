@@ -1,7 +1,7 @@
 - hosts: all
   become: true
   vars_files:
-    - vars/default.yml
+    - secrets/production.yml
     - vars/production.yml
 
   tasks:
@@ -48,9 +48,9 @@
         - docker-compose.yml
         - nginx.conf
         - api.env
-        - mariadb.env
         - ui.env
         - wordpress.env
+        - my.cnf
 
     - name: Pull container images
       command: docker compose pull

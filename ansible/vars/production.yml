@@ -1,15 +1,19 @@
 ---
-email_gateway_url: null://localhost
+app_basedir: "/opt/liga-manager"
+db_users:
+  lima: lima
+  readonly: readonly
+  wordpress: wordpress
+docker_users: ['marius']
 email_sender_address: noreply@wildeligabremen.de
 email_sender_name: Wilde Liga Bremen
-google_maps_api_key: eeee
-jwt_secret: ffff
-lima_db_user: lima
-lima_db_password: aaaa
-mysql_root_password: bbbb
 ssl_domain: wltest.mklocke.de
 ssl_webmaster: webmaster@gmail.com
-readonly_db_user: readonly
-readonly_db_password: dddd
-wordpress_db_user: wordpress
-wordpress_db_password: cccc
+sys_packages: [ 'containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'git', 'ufw', 'vim']
+versions:
+  api: 1.10.0
+  mariadb: 10.6
+  nginx: 1-alpine
+  redis: 6-alpine
+  ui: latest
+  wordpress: 5.8-php8.0-fpm-alpine

@@ -23,8 +23,7 @@ services:
       - mariadb:/var/lib/mysql
       - backups:/backup
       - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
-    env_file:
-      - ./mariadb.env
+      - ./my.cnf:/root/.my.cnf:ro
   nginx:
     image: nginx:{{versions.nginx}}
     restart: unless-stopped

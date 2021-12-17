@@ -1,13 +1,16 @@
+ALTER USER 'root'@'localhost' IDENTIFIED BY '{{db_passwords.root}}';
+ALTER USER 'root'@'%' IDENTIFIED BY '{{db_passwords.root}}';
+
 CREATE DATABASE IF NOT EXISTS lima;
-CREATE USER IF NOT EXISTS {{lima_db_user}}@'%' IDENTIFIED BY '{{lima_db_password}}';
-GRANT ALL PRIVILEGES ON lima.* TO {{lima_db_user}}@'%';
+CREATE USER IF NOT EXISTS {{db_users.lima}}@'%' IDENTIFIED BY '{{db_passwords.lima}}';
+GRANT ALL PRIVILEGES ON lima.* TO {{db_users.lima}}@'%';
 
 CREATE DATABASE IF NOT EXISTS wordpress;
-CREATE USER IF NOT EXISTS {{wordpress_db_user}}@'%' IDENTIFIED BY '{{wordpress_db_password}}';
-GRANT ALL PRIVILEGES ON wordpress.* TO {{wordpress_db_user}}@'%';
+CREATE USER IF NOT EXISTS {{db_users.wordpress}}@'%' IDENTIFIED BY '{{db_passwords.wordpress}}';
+GRANT ALL PRIVILEGES ON wordpress.* TO {{db_users.wordpress}}@'%';
 
-CREATE USER IF NOT EXISTS {{readonly_db_user}}@'%' IDENTIFIED BY '{{readonly_db_password}}';
-GRANT SELECT ON lima.* TO {{readonly_db_user}}@'%';
-GRANT SELECT ON wordpress.* TO {{readonly_db_user}}@'%';
+CREATE USER IF NOT EXISTS {{db_users.readonly}}@'%' IDENTIFIED BY '{{db_passwords.readonly}}';
+GRANT SELECT ON lima.* TO {{db_users.readonly}}@'%';
+GRANT SELECT ON wordpress.* TO {{db_users.readonly}}@'%';
 
 FLUSH PRIVILEGES;
