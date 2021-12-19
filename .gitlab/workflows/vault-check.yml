@@ -1,0 +1,10 @@
+name: Check Ansible Vault Encryption
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Check production secrets are encrypted
+        run: head -n 1 secrets/production.yml | grep -P '^\$ANSIBLE_VAULT;\d\.\d;AES256$'

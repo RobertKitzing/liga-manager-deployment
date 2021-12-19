@@ -1,0 +1,1 @@
+homer ansible_host=139.59.140.55 ansible_ssh_user=root ansible_python_interpreter=/usr/bin/python3
