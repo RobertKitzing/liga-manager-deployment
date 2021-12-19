@@ -7,4 +7,4 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: Check production secrets are encrypted
-        run: head -n 1 secrets/production.yml | grep -P '^\$ANSIBLE_VAULT;\d\.\d;AES256$'
+        run: head -n 1 ansible/secrets/production.yml | grep -P '^\$ANSIBLE_VAULT;\d\.\d;AES256$'
