@@ -1,0 +1,24 @@
+- hosts: all
+  become: true
+  vars_files:
+    - secrets/production.yml
+    - vars/production.yml
+
+  tasks:
+    - name: Update docker-compose.yml
+      template:
+        src: "conf/docker-compose.yml.j2"
+        dest: "{{ app_basedir }}/docker-compose.yml"
+        owner: root
+        group: docker
+        mode: '0640'
+
+    - name: Pull container images
+      command: docker compose pull api ui
+      args:
+        chdir: "{{ app_basedir }}"
+
+    - name: Recreate containers with updated images
+      command: docker compose up -d api ui
+      args:
+        chdir: "{{ app_basedir }}"
