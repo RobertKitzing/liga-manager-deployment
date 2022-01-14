@@ -6,7 +6,7 @@ services:
     env_file:
       - ./ui.env
   api:
-    image: mklocke/liga-manager-api:1.11.2
+    image: mklocke/liga-manager-api:1.11.3
     restart: unless-stopped
     user: www-data
     volumes:
