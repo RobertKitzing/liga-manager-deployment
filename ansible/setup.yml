@@ -1,3 +1,4 @@
+# This playbook contains setup steps to be applied on new servers
 - hosts: all
   become: true
   vars_files:

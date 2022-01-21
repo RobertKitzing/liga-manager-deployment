@@ -1,3 +1,6 @@
+# This playbook performs a complete deployment
+# It will rewrite configuration for all services and recreate all containers
+# Since webserver and database are restarted as well, there will be a short downtime
 - hosts: all
   become: true
   vars_files:

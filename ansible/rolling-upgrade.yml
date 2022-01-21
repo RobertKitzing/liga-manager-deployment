@@ -1,7 +1,9 @@
+# This playbook performs a rolling upgrade deployment
+# It is only suitable for updating main application services (api/ui) without changing config files
+# Do not use this if updates to the webserver or the database need to be applied
 - hosts: all
   become: true
   vars_files:
-    - secrets/production.yml
     - vars/production.yml
 
   tasks:
