@@ -18,6 +18,9 @@ $ ansible-playbook -i inventory/production setup.yml
 
 # Deploy services
 $ ansible-playbook -i inventory/production --vault-password-file vault-password deploy.yml
+
+# Rolling upgrade
+$ ansible-playbook -i inventory/production rolling-upgrade.yml
 ```
 
 ## How set up a new server
