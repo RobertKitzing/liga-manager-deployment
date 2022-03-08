@@ -12,6 +12,7 @@ ssl_webmaster: webmaster@gmail.com
 sys_packages: [ 'containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'git', 'ufw', 'vim']
 versions:
   api: 1.12.0
+  docker-compose: 2.3.2
   mariadb: 10.6
   nginx: 1-alpine
   redis: 6-alpine
