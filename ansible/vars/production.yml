@@ -11,9 +11,9 @@ ssl_domain: wlb05.mklocke.de
 ssl_webmaster: webmaster@gmail.com
 sys_packages: [ 'containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'git', 'ufw', 'vim']
 versions:
-  api: 1.11.3
+  api: 1.12.0
   mariadb: 10.6
   nginx: 1-alpine
   redis: 6-alpine
   ui: latest
-  wordpress: 5.8-php8.0-fpm-alpine
+  wordpress: 5.9-php8.1-fpm-alpine
