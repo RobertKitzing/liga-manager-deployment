@@ -6,7 +6,7 @@ services:
     env_file:
       - ./ui.env
   api:
-    image: mklocke/liga-manager-api:1.10.0
+    image: mklocke/liga-manager-api:1.12.0
     restart: unless-stopped
     user: www-data
     volumes:
@@ -38,7 +38,7 @@ services:
       - api
       - cms
   cms:
-    image: wordpress:5.8-php8.0-fpm-alpine
+    image: wordpress:5.9-php8.1-fpm-alpine
     restart: unless-stopped
     volumes:
       - ./volumes/wp-files:/var/www/html
