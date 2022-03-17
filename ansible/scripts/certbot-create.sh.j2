@@ -2,6 +2,6 @@
 
 apk add certbot certbot-nginx
 
-if [ ! -d '/etc/letsencrypt/live/{{ ssl_domain }}' ]; then
-  certbot certonly --standalone -n -d {{ ssl_domain }} -m {{ ssl_webmaster }} --agree-tos
+if [ ! -d '/etc/letsencrypt/live/{{ domains.wordpress.cname }}' ]; then
+  certbot certonly --standalone -n -d {{ domains.wordpress.cname }} -d {{ domains.wordpress.alias }} -d {{ domains.lima }} -m {{ webmaster.mail }} --agree-tos
 fi

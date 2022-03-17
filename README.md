@@ -26,8 +26,7 @@ $ ansible-playbook -i inventory/production rolling-upgrade.yml
 ## How set up a new server
 
 * Create a VM with a recent version of Ubuntu Linux at any hosting provider
-* Add SSH keys to root user's `authorized_keys` file
-* Install the latest software updates and reboot if there are kernel changes
+* Add your SSH public key to root user's `authorized_keys` file
 * Add the public IPv4 address to inventory file
 * Setup the server using `setup.yml`
 * Make sure you have access to the vault password for decrypting secrets

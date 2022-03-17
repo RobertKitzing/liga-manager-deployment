@@ -1,1 +1,1 @@
-homer ansible_host=165.227.141.142 ansible_ssh_user=root ansible_python_interpreter=/usr/bin/python3
+wlb-prod ansible_host=164.92.137.150 ansible_ssh_user=root ansible_python_interpreter=/usr/bin/python3

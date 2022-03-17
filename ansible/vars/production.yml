@@ -1,5 +1,6 @@
 ---
 app_basedir: "/opt/liga-manager"
+apt_packages: ['containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'git', 'ufw', 'vim']
 db_users:
   lima: lima
   readonly: readonly
@@ -7,9 +8,11 @@ db_users:
 docker_users: ['marius']
 email_sender_address: noreply@wildeligabremen.de
 email_sender_name: Wilde Liga Bremen
-ssl_domain: wlb05.mklocke.de
-ssl_webmaster: webmaster@gmail.com
-sys_packages: [ 'containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'git', 'ufw', 'vim']
+domains:
+  wordpress:
+    cname: wlb.mklocke.de
+    alias: www.wlb.mklocke.de
+  lima: manager.wlb.mklocke.de
 versions:
   api: 1.12.0
   docker-compose: 2.3.2
@@ -18,3 +21,5 @@ versions:
   redis: 6-alpine
   ui: latest
   wordpress: 5.9-php8.1-fpm-alpine
+webmaster:
+  mail: webmaster@gmail.com
