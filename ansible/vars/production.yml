@@ -1,6 +1,6 @@
 ---
 app_basedir: "/opt/liga-manager"
-apt_packages: ['containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'git', 'ufw', 'vim']
+apt_packages: ['containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'git', 'fail2ban', 'ufw', 'vim']
 db_users:
   lima: lima
   readonly: readonly
