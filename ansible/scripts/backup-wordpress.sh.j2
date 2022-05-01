@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+RETENTION_DAYS=90
+
+set -e
+
+case $1 in
+  "create")
+    docker compose exec -T mariadb sh -c "find /backup -mtime +$RETENTION_DAYS -type f -name 'wordpress-db-*.sql.gz' -delete"
+    docker compose exec -T -u root wordpress sh -c "find /backup -mtime +$RETENTION_DAYS -type f -name 'wp-files-*.tar.gz' -delete"
+    TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
+    docker compose exec -T mariadb sh -c "mysqldump --single-transaction wordpress | gzip > /backup/wordpress-db-$TIMESTAMP.sql.gz"
+    docker compose exec -T -u root wordpress sh -c "cd /var/www/html && tar -czf /backup/wp-files-$TIMESTAMP.tar.gz ."
+    echo "Backup $TIMESTAMP has been created."
+    ;;
+  "list")
+    docker compose exec mariadb sh -c "find /backup -maxdepth 1 -name 'wordpress-db-*.sql.gz' -type f"
+    docker compose exec mariadb sh -c "find /backup -maxdepth 1 -name 'wp-files-*.tar.gz' -type f"
+    ;;
+  "restore")
+    TIMESTAMP=$2
+    docker compose exec -T mariadb sh -c "zcat /backup/wordpress-db-$TIMESTAMP.sql.gz | mysql wordpress"
+    docker compose exec -T -u root wordpress sh -c "cd /var/www/html && tar -xzf /backup/wp-files-$TIMESTAMP.tar.gz"
+    echo "Backup $TIMESTAMP has been restored."
+    ;;
+  *)
+    echo "Usage:"
+    echo "$0 create"
+    echo "$0 list"
+    echo "$0 restore <timestamp>"
+    ;;
+esac

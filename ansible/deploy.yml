@@ -32,13 +32,18 @@
         group: docker
         mode: '0644'
 
-    - name: Update certbot-create.sh
+    - name: Update utility scripts
       template:
-        src: scripts/certbot-create.sh.j2
-        dest: "{{ app_basedir }}/certbot-create.sh"
+        src: "scripts/{{ item }}.j2"
+        dest: "{{ app_basedir }}/{{ item }}"
         owner: root
         group: docker
         mode: '0755'
+      with_items:
+        - backup-lima.sh
+        - backup-wordpress.sh
+        - certbot-create.sh
+        - certbot-renew.sh
 
     - name: Update config files
       template:
@@ -50,6 +55,7 @@
       with_items:
         - docker-compose.yml
         - nginx.conf
+        - nginx-ssl.conf
         - api.env
         - ui.env
         - wordpress.env
@@ -65,13 +71,29 @@
       args:
         chdir: "{{ app_basedir }}"
 
-    - name: Configure daily cronjobs
-      template:
-        src: "scripts/{{ item }}.sh.j2"
-        dest: "/etc/cron.daily/{{ item }}"
-        owner: root
-        group: docker
-        mode: '0750'
-      with_items:
-        - certbot-renew
-        - backup
+    - name: Configure /etc/cron.d/backup-lima
+      cron:
+        name: backup-lima
+        minute: "5"
+        hour: "4"
+        user: root
+        job: "cd {{ app_basedir }} && ./backup-lima.sh create > /dev/null 2>&1"
+        cron_file: backup-lima
+
+    - name: Configure /etc/cron.d/backup-wordpress
+      cron:
+        name: backup-wordpress
+        minute: "15"
+        hour: "4"
+        user: root
+        job: "cd {{ app_basedir }} && ./backup-wordpress.sh create > /dev/null 2>&1"
+        cron_file: backup-wordpress
+
+    - name: Configure /etc/cron.d/certbot-renew
+      cron:
+        name: certbot-renew
+        minute: "25"
+        hour: "4"
+        user: root
+        job: "cd {{ app_basedir }} && ./certbot-renew.sh > /dev/null 2>&1"
+        cron_file: certbot-renew

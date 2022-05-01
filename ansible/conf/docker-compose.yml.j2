@@ -34,7 +34,6 @@ services:
       - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./certbot-create.sh:/docker-entrypoint.d/certbot-create.sh:ro
       - certs:/etc/letsencrypt
       - wp-files:/var/www/html
     depends_on:

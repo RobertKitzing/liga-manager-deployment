@@ -28,7 +28,15 @@ $ ansible-playbook -i inventory/production rolling-upgrade.yml
 * Create a VM with a recent version of Ubuntu Linux at any hosting provider
 * Add your SSH public key to root user's `authorized_keys` file
 * Add the public IPv4 address to inventory file
-* Setup the server using `setup.yml`
+* Set up the server using `setup.yml`
 * Make sure you have access to the vault password for decrypting secrets
 * You can write the password to a file named `vault-password` or use `--ask-vault-password` to enter it every time you deploy
 * Execute a deployment using `deploy.yml`
+
+## How to deploy
+
+* A deployment updates one or more docker containers to a more recent version
+* Update versions in `vars/production`
+* If you only need to update versions of `ui` or `api` container, then use `rolling-upgrade.yml`
+* If you need to update `mariadb`, `nginx` or `redis`, then use `deploy.yml`
+* If everything went fine, commit the changes to the repository

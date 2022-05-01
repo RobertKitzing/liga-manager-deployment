@@ -1,1 +1,1 @@
-wlb-prod ansible_host=164.92.137.150 ansible_ssh_user=root ansible_python_interpreter=/usr/bin/python3
+wlb-prod ansible_host=157.230.111.159 ansible_ssh_user=root ansible_python_interpreter=/usr/bin/python3

@@ -1,4 +1,3 @@
 #!/bin/sh
 
-cd "{{ app_basedir }}"
-docker compose exec -T nginx sh -c "certbot --nginx renew"
+docker compose exec -T nginx certbot --nginx renew
