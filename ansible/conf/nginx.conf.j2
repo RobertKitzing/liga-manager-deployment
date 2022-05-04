@@ -1,4 +1,4 @@
-limit_req_zone $binary_remote_addr zone=api:10m rate=5r/s;
+limit_req_zone $binary_remote_addr zone=main:10m rate=5r/s;
 
 server {
     listen 80 default_server;
@@ -7,6 +7,8 @@ server {
 
     gzip on;
     gzip_types application/json application/javascript image/png application/font-woff2 image/x-icon;
+
+    limit_req zone=main burst=200 nodelay;
 
     location /ws {
         proxy_pass http://ui:3098/ws;
