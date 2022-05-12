@@ -2,12 +2,12 @@ version: '3.7'
 services:
   ui:
     image: robertkitzing/liga-manager-ui:{{versions.ui}}
-    restart: unless-stopped
+    restart: on-failure:3
     env_file:
       - ./ui.env
   api:
     image: mklocke/liga-manager-api:{{versions.api}}
-    restart: unless-stopped
+    restart: on-failure:3
     user: www-data
     depends_on:
       - mariadb
@@ -16,7 +16,7 @@ services:
       - ./api.env
   mariadb:
     image: mariadb:{{versions.mariadb}}
-    restart: unless-stopped
+    restart: on-failure:3
     ports:
       - "127.0.0.1:3306:3306"
     volumes:
@@ -28,7 +28,7 @@ services:
       - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
   nginx:
     image: nginx:{{versions.nginx}}
-    restart: unless-stopped
+    restart: on-failure:3
     ports:
       - "80:80"
       - "443:443"
@@ -42,7 +42,7 @@ services:
       - wordpress
   wordpress:
     image: wordpress:{{versions.wordpress}}
-    restart: unless-stopped
+    restart: on-failure:3
     volumes:
       - wp-files:/var/www/html
       - backups:/backup
@@ -52,7 +52,7 @@ services:
       - mariadb
   redis:
     image: redis:{{versions.redis}}
-    restart: unless-stopped
+    restart: on-failure:3
     ports:
       - "127.0.0.1:6379:6379"
 
