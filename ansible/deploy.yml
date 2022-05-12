@@ -74,6 +74,7 @@
     - name: Configure /etc/cron.d/backup-lima
       cron:
         name: backup-lima
+        disabled: yes
         minute: "5"
         hour: "4"
         user: root
@@ -83,6 +84,7 @@
     - name: Configure /etc/cron.d/backup-wordpress
       cron:
         name: backup-wordpress
+        disabled: yes
         minute: "15"
         hour: "4"
         user: root
@@ -92,6 +94,7 @@
     - name: Configure /etc/cron.d/certbot-renew
       cron:
         name: certbot-renew
+        disabled: yes
         minute: "25"
         hour: "4"
         user: root
