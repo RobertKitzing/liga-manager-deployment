@@ -11,7 +11,7 @@ case $1 in
     echo "Backup $TIMESTAMP has been created."
     ;;
   "list")
-    docker compose exec mariadb sh -c "find /backup -maxdepth 1 -name 'lima-db-*.sql.gz' -type f"
+    docker compose exec mariadb sh -c "cd /backup && ls -lh lima-db-*.sql.gz 2> /dev/null"
     ;;
   "restore")
     TIMESTAMP=$2

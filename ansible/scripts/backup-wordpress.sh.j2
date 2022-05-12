@@ -13,8 +13,8 @@ case $1 in
     echo "Backup $TIMESTAMP has been created."
     ;;
   "list")
-    docker compose exec mariadb sh -c "find /backup -maxdepth 1 -name 'wordpress-db-*.sql.gz' -type f"
-    docker compose exec mariadb sh -c "find /backup -maxdepth 1 -name 'wp-files-*.tar.gz' -type f"
+    docker compose exec mariadb sh -c "cd /backup && ls -lh wordpress-db-*.sql.gz 2> /dev/null"
+    docker compose exec mariadb sh -c "cd /backup && ls -lh wp-files-*.tar.gz 2> /dev/null"
     ;;
   "restore")
     TIMESTAMP=$2
