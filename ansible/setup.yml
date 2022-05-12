@@ -14,11 +14,19 @@
       user:
         name: "{{ item }}"
         shell: /bin/bash
-        groups: docker
+        groups: docker,root,admin
         append: yes
-      with_items: "{{ docker_users }}"
+      with_items: "{{ admin_users }}"
 
-    - name: Disable password authentication for root
+    - name: Enable sudo without using password
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%sudo'
+        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Disable password authentication for root in sshd config
       lineinfile:
         path: /etc/ssh/sshd_config
         state: present
