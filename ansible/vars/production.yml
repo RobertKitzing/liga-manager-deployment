@@ -15,7 +15,7 @@ domains:
   lima: manager.wildeligabremen.de
 versions:
   api: 1.12.2
-  docker-compose: 2.3.2
+  docker-compose: 2.5.0
   mariadb: 10.6
   nginx: 1-alpine
   redis: 6-alpine
