@@ -40,3 +40,29 @@ $ ansible-playbook -i inventory/production rolling-upgrade.yml
 * If you only need to update versions of `ui` or `api` container, then use `rolling-upgrade.yml`
 * If you need to update `mariadb`, `nginx` or `redis`, then use `deploy.yml`
 * If everything went fine, commit the changes to the repository
+
+## Maintenance modes
+
+### Wordpress
+
+Use the following commands inside the `wordpress` container.
+
+```bash
+# Enable
+$ echo '<?php $upgrading = time(); ?>' > .maintenance
+
+# Disable
+$ rm .maintenance
+```
+
+### Liga Manager
+
+Use the following commands inside the `api` container.
+
+```bash
+# Enable
+$ lima app:maintenance --mode=on
+
+# Disable
+$ lima app:maintenance --mode=off
+```
