@@ -1,7 +1,7 @@
 ---
 admin_users: ['marius', 'robert']
 app_basedir: "/opt/liga-manager"
-apt_packages: ['containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'git', 'fail2ban', 'ufw', 'vim']
+apt_packages: ['containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'docker-compose-plugin', 'git', 'fail2ban', 'ufw', 'vim']
 db_users:
   lima: lima
   readonly: readonly
@@ -15,7 +15,6 @@ domains:
   lima: manager.wildeligabremen.de
 versions:
   api: 1.12.2
-  docker-compose: 2.5.0
   mariadb: 10.6
   nginx: 1-alpine
   redis: 6-alpine

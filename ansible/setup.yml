@@ -61,17 +61,5 @@
     - name: Install packages
       apt: name={{ apt_packages }} state=latest
 
-    - name: Make sure docker plugin path exists
-      file:
-        path: /usr/local/lib/docker/cli-plugins
-        state: directory
-        mode: "0755"
-
-    - name: Download docker-compose as plugin from GitHub
-      get_url:
-        url: https://github.com/docker/compose/releases/download/v{{ versions['docker-compose'] }}/docker-compose-linux-x86_64
-        dest: /usr/local/lib/docker/cli-plugins/docker-compose
-        mode: "0755"
-
     - name: Reboot machine
       reboot:
