@@ -48,7 +48,7 @@
 
     - name: Configure apt repositories
       apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
         state: present
 
     - name: Update apt cache
