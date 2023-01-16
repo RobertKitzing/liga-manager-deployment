@@ -8,21 +8,28 @@
     - vars/production.yml
 
   tasks:
+    - name: Remove cronjob backup-lima
+      cron:
+        name: backup-lima
+        cron_file: backup-lima
+        state: absent
+
+    - name: Remove cronjob backup-wordpress
+      cron:
+        name: backup-wordpress
+        cron_file: backup-wordpress
+        state: absent
+
+    - name: Remove cronjob certbot-renew
+      cron:
+        name: certbot-renew
+        cron_file: certbot-renew
+        state: absent
+
     - name: Ensure application basedir is present
       file:
         path: "{{ app_basedir }}"
         state: directory
-
-    - name: Check if docker-compose.yml exists
-      stat:
-        path: "{{ app_basedir }}/docker-compose.yml"
-      register: docker_compose_yml
-
-    - name: Remove running containers
-      command: docker compose down
-      args:
-        chdir: "{{ app_basedir }}"
-      when: docker_compose_yml.stat.exists
 
     - name: Update setup.sql
       template:
@@ -66,35 +73,37 @@
       args:
         chdir: "{{ app_basedir }}"
 
-    - name: Create containers
+    - name: Remove existing containers
+      command: docker compose down --remove-orphans
+      args:
+        chdir: "{{ app_basedir }}"
+
+    - name: Create new containers
       command: docker compose up -d
       args:
         chdir: "{{ app_basedir }}"
 
-    - name: Configure /etc/cron.d/backup-lima
+    - name: Add cronjob backup-lima
       cron:
         name: backup-lima
-        # disabled: yes
         minute: "5"
         hour: "4"
         user: root
         job: "cd {{ app_basedir }} && ./backup-lima.sh create > /dev/null 2>&1"
         cron_file: backup-lima
 
-    - name: Configure /etc/cron.d/backup-wordpress
+    - name: Add cronjob backup-wordpress
       cron:
         name: backup-wordpress
-        # disabled: yes
         minute: "15"
         hour: "4"
         user: root
         job: "cd {{ app_basedir }} && ./backup-wordpress.sh create > /dev/null 2>&1"
         cron_file: backup-wordpress
 
-    - name: Configure /etc/cron.d/certbot-renew
+    - name: Add cronjob certbot-renew
       cron:
         name: certbot-renew
-        # disabled: yes
         minute: "25"
         hour: "4"
         user: root
