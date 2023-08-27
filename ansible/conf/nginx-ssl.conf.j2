@@ -8,7 +8,8 @@ server {
 }
 
 server {
-    listen 443 ssl http2;
+    listen 443 ssl;
+    http2 on;
     server_name {{ domains.wordpress.cname }} {{ domains.wordpress.alias }};
     root /var/www/html;
     index index.php;
@@ -46,7 +47,8 @@ server {
 }
 
 server {
-    listen 443 ssl http2;
+    listen 443 ssl;
+    http2 on;
     server_name {{ domains.lima }};
     
     ssl_certificate /etc/letsencrypt/live/{{ domains.wordpress.cname }}/fullchain.pem;
