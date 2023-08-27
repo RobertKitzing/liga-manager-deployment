@@ -14,11 +14,11 @@ domains:
     alias: www.wildeligabremen.de
   lima: manager.wildeligabremen.de
 versions:
-  api: 1.12.10
-  mariadb: 10.6
-  nginx: 1-alpine
-  redis: 6-alpine
-  ui: latest
-  wordpress: 5.9-php8.1-fpm-alpine
+  api: "1.13.0"
+  mariadb: "10.6"
+  nginx: "1-alpine"
+  redis: "6-alpine"
+  ui: "latest"
+  wordpress: "5.9-php8.1-fpm-alpine"
 webmaster:
   mail: webmaster@gmail.com
