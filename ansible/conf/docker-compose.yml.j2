@@ -30,8 +30,9 @@ services:
     image: nginx:{{versions.nginx}}
     restart: on-failure:3
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:80/tcp"
+      - "443:443/tcp"
+      - "443:443/udp"
     volumes:
       - ./nginx-ssl.conf:/etc/nginx/conf.d/default.conf
       - certs:/etc/letsencrypt
