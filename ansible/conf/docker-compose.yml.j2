@@ -8,6 +8,8 @@ services:
   api:
     image: mklocke/liga-manager-api:{{versions.api}}
     restart: on-failure:3
+    volumes:
+      - logos:/var/www/logos
     depends_on:
       - mariadb
       - redis
@@ -36,6 +38,7 @@ services:
       - ./nginx-ssl.conf:/etc/nginx/conf.d/default.conf
       - certs:/etc/letsencrypt
       - wp-files:/var/www/html
+      - logos:/var/www/logos:ro
     depends_on:
       - ui
       - api
@@ -61,3 +64,4 @@ volumes:
   wp-files:
   backups:
   certs:
+  logos:
