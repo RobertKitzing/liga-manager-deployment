@@ -8,7 +8,6 @@ services:
   api:
     image: mklocke/liga-manager-api:{{versions.api}}
     restart: on-failure:3
-    user: www-data
     depends_on:
       - mariadb
       - redis
