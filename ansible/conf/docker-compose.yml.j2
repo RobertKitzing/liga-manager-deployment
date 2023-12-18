@@ -9,6 +9,7 @@ services:
     image: mklocke/liga-manager-api:{{versions.api}}
     restart: on-failure:3
     volumes:
+      - backups:/backup
       - logos:/var/www/logos
     depends_on:
       - mariadb
