@@ -14,7 +14,7 @@ domains:
     alias: www.wildeligabremen.de
   lima: manager.wildeligabremen.de
 versions:
-  api: "1.14.0"
+  api: "1.15.0"
   mariadb: "10.11"
   nginx: "1-alpine"
   redis: "6-alpine"
