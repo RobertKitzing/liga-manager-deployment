@@ -1,25 +1,29 @@
 #!/usr/bin/env bash
-RETENTION_DAYS=90
 
 set -e
 
+RETENTION_DAYS=90
+BACKUP_DIRECTORY=$(docker volume inspect --format '{{.Mountpoint}}' "liga-manager_backups")
+LOGOS_DIRECTORY=$(docker volume inspect --format '{{.Mountpoint}}' "liga-manager_logos")
+
 case $1 in
   "create")
-    docker compose exec -T mariadb sh -c "find /backup -mtime +$RETENTION_DAYS -type f -name 'lima-db-*.sql.gz' -delete"
-    docker compose exec -T api sh -c "find /backup -mtime +$RETENTION_DAYS -type f -name 'lima-logos-*.tar.gz' -delete"
+    find "$BACKUP_DIRECTORY" -mtime +$RETENTION_DAYS -type f -name 'lima-db-*.sql.gz' -delete
+    find "$BACKUP_DIRECTORY" -mtime +$RETENTION_DAYS -type f -name 'lima-logos-*.tar.gz' -delete
     TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
-    docker compose exec -T mariadb sh -c "mysqldump --single-transaction lima | gzip > /backup/lima-db-$TIMESTAMP.sql.gz"
-    docker compose exec -T api sh -c "cd /var/www/logos && tar -czf /backup/lima-logos-$TIMESTAMP.tar.gz ."
+    docker compose exec -T mariadb mysqldump --single-transaction lima | gzip > "$BACKUP_DIRECTORY/lima-db-$TIMESTAMP.sql.gz"
+    tar -C "$LOGOS_DIRECTORY" -czf "$BACKUP_DIRECTORY/lima-logos-$TIMESTAMP.tar.gz" "."
     echo "Backup $TIMESTAMP has been created."
     ;;
   "list")
-    docker compose exec mariadb sh -c "cd /backup && ls -lh lima-db-*.sql.gz 2> /dev/null"
-    docker compose exec mariadb sh -c "cd /backup && ls -lh lima-logos-*.tar.gz 2> /dev/null"
+    cd "$BACKUP_DIRECTORY"
+    ls -lh lima-db-*.sql.gz
+    ls -lh lima-logos-*.tar.gz
     ;;
   "restore")
     TIMESTAMP=$2
-    docker compose exec -T mariadb sh -c "zcat /backup/lima-db-$TIMESTAMP.sql.gz | mysql lima"
-    docker compose exec -T api sh -c "cd /var/www/logos && tar -xzf /backup/lima-logos-$TIMESTAMP.tar.gz"
+    zcat "$BACKUP_DIRECTORY/lima-db-$TIMESTAMP.sql.gz" | docker compose exec -T mariadb mysql lima
+    tar -C "$LOGOS_DIRECTORY" -xzf "$BACKUP_DIRECTORY/lima-logos-$TIMESTAMP.tar.gz"
     echo "Backup $TIMESTAMP has been restored."
     ;;
   *)

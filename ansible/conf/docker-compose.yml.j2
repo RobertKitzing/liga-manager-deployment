@@ -9,7 +9,6 @@ services:
     image: mklocke/liga-manager-api:{{versions.api}}
     restart: on-failure:3
     volumes:
-      - backups:/backup
       - logos:/var/www/logos
     depends_on:
       - mariadb
@@ -23,7 +22,6 @@ services:
       - "127.0.0.1:3306:3306"
     volumes:
       - mariadb:/var/lib/mysql
-      - backups:/backup
       - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
       - ./my.cnf:/root/.my.cnf:ro
     environment:
@@ -49,7 +47,6 @@ services:
     restart: on-failure:3
     volumes:
       - wp-files:/var/www/html
-      - backups:/backup
     env_file:
       - ./wordpress.env
     depends_on:
