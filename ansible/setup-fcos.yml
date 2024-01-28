@@ -1,0 +1,36 @@
+# This playbook contains steps to initially set up a Fedora CoreOS server
+- hosts: wlb-prod-02
+  become: true
+
+  tasks:
+    - name: Register repository for docker
+      get_url:
+        url: https://download.docker.com/linux/fedora/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+        mode: '0644'
+
+    - name: Install packages
+      command: 'rpm-ostree install docker-compose-plugin fail2ban ncdu'
+
+    - name: Reboot the target
+      reboot:
+
+    - name: Copy sshd.conf for fail2ban
+      copy:
+        src: conf/sshd.conf
+        dest: /etc/fail2ban/jail.d/sshd.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Enable docker daemon
+      systemd_service:
+        name: docker.service
+        state: started
+        enabled: true
+
+    - name: Enable fail2ban daemon
+      systemd_service:
+        name: fail2ban.service
+        state: started
+        enabled: true

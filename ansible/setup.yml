@@ -1,5 +1,5 @@
 # This playbook contains setup steps to be applied on new servers
-- hosts: all
+- hosts: wlb-prod-01
   become: true
   vars_files:
     - vars/production.yml

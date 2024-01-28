@@ -1,31 +1,13 @@
 # This playbook performs a complete deployment
 # It will rewrite configuration for all services and recreate all containers
 # Since webserver and database are restarted as well, there will be a short downtime
-- hosts: wlb-prod-01
+- hosts: wlb-prod-02
   become: true
   vars_files:
     - secrets/production.yml
     - vars/production.yml
 
   tasks:
-    - name: Remove cronjob backup-lima
-      cron:
-        name: backup-lima
-        cron_file: backup-lima
-        state: absent
-
-    - name: Remove cronjob backup-wordpress
-      cron:
-        name: backup-wordpress
-        cron_file: backup-wordpress
-        state: absent
-
-    - name: Remove cronjob certbot-renew
-      cron:
-        name: certbot-renew
-        cron_file: certbot-renew
-        state: absent
-
     - name: Ensure application basedir is present
       file:
         path: "{{ app_basedir }}"
@@ -82,39 +64,31 @@
       args:
         chdir: "{{ app_basedir }}"
 
-    - name: Remove existing containers
-      command: docker compose down --remove-orphans
-      args:
-        chdir: "{{ app_basedir }}"
-
     - name: Create new containers
       command: docker compose up -d
       args:
         chdir: "{{ app_basedir }}"
 
-    - name: Add cronjob backup-lima
-      cron:
-        name: backup-lima
-        minute: "5"
-        hour: "4"
-        user: root
-        job: "cd {{ app_basedir }} && ./backup-lima.sh create > /dev/null 2>&1"
-        cron_file: backup-lima
+    - name: Copy systemd unit files
+      copy:
+        src: "conf/{{ item }}"
+        dest: "/etc/systemd/system/{{ item }}"
+        owner: root
+        group: root
+        mode: '0644'
+      with_items:
+        - backup-lima.service
+        - backup-lima.timer
+        - backup-wordpress.service
+        - backup-wordpress.timer
 
-    - name: Add cronjob backup-wordpress
-      cron:
-        name: backup-wordpress
-        minute: "15"
-        hour: "4"
-        user: root
-        job: "cd {{ app_basedir }} && ./backup-wordpress.sh create > /dev/null 2>&1"
-        cron_file: backup-wordpress
+    - name: Reload systemd
+      command: "systemctl daemon-reload"
 
-    - name: Add cronjob certbot-renew
-      cron:
-        name: certbot-renew
-        minute: "25"
-        hour: "4"
-        user: root
-        job: "cd {{ app_basedir }} && ./certbot-renew.sh > /dev/null 2>&1"
-        cron_file: certbot-renew
+    - name: Enable systemd units
+      command: "systemctl enable {{ item }}"
+      with_items:
+        - backup-lima.service
+        - backup-lima.timer
+        - backup-wordpress.service
+        - backup-wordpress.timer

@@ -1,7 +1,7 @@
 # This playbook performs a rolling upgrade deployment
 # It is only suitable for updating main application services (api/ui) without changing config files
 # Do not use this if updates to the webserver or the database need to be applied
-- hosts: all
+- hosts: wlb-prod-01
   become: true
   vars_files:
     - vars/production.yml
