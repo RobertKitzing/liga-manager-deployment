@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup timer for wordpress
+
+[Timer]
+OnCalendar=04:05
+Unit=backup-wordpress.service
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target

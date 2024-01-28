@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup timer for lima
+
+[Timer]
+OnCalendar=03:55
+Unit=backup-lima.service
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target

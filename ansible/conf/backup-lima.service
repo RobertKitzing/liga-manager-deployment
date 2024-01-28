@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup service for lima
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/liga-manager
+ExecStart=/opt/liga-manager/backup-lima.sh create
+
+[Install]
+WantedBy=multi-user.target

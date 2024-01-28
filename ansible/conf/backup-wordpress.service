@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup service for wordpress
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/liga-manager
+ExecStart=/opt/liga-manager/backup-wordpress.sh create
+
+[Install]
+WantedBy=multi-user.target
