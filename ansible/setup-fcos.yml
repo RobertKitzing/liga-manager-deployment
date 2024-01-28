@@ -3,6 +3,14 @@
   become: true
 
   tasks:
+    - name: Copy config for zincati
+      copy:
+        src: conf/zincati.toml
+        dest: /etc/zincati/config.d/updates.toml
+        owner: root
+        group: root
+        mode: '0644'
+
     - name: Register repository for docker
       get_url:
         url: https://download.docker.com/linux/fedora/docker-ce.repo
