@@ -1,6 +1,8 @@
 # This playbook contains steps to initially set up a Fedora CoreOS server
 - hosts: wlb-prod-02
   become: true
+  vars_files:
+    - vars/production.yml
 
   tasks:
     - name: Copy config for zincati
@@ -10,6 +12,14 @@
         owner: root
         group: root
         mode: '0644'
+
+    - name: Make sure users are present
+      user:
+        name: "{{ item }}"
+        shell: /bin/bash
+        groups: docker,sudo,adm,wheel
+        append: yes
+      with_items: "{{ admin_users }}"
 
     - name: Register repository for docker
       get_url:

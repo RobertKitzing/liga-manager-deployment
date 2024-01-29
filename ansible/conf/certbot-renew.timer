@@ -1,0 +1,10 @@
+[Unit]
+Description=Certificate renewal with certbot
+
+[Timer]
+OnCalendar=04:15
+Unit=certbot-renew.service
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target

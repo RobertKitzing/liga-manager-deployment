@@ -1,0 +1,10 @@
+[Unit]
+Description=Certificate renewal with certbot
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/liga-manager
+ExecStart=/opt/liga-manager/certbot-renew.sh
+
+[Install]
+WantedBy=multi-user.target

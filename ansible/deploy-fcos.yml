@@ -81,6 +81,8 @@
         - backup-lima.timer
         - backup-wordpress.service
         - backup-wordpress.timer
+        - certbot-renew.service
+        - certbot-renew.timer
 
     - name: Reload systemd
       command: "systemctl daemon-reload"
@@ -92,3 +94,5 @@
         - backup-lima.timer
         - backup-wordpress.service
         - backup-wordpress.timer
+        #- certbot-renew.service
+        #- certbot-renew.timer
