@@ -8,3 +8,6 @@ time_zone = "Etc/UTC"
 days = [ "Mon" ]
 start_time = "04:30"
 length_minutes = 30
+
+[agent.timing]
+steady_interval_secs = 3600
