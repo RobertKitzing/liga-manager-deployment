@@ -2,6 +2,7 @@
 admin_users: ['marius', 'robert']
 app_basedir: "/opt/liga-manager"
 apt_packages: ['containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'docker-compose-plugin', 'git', 'fail2ban', 'ufw', 'vim']
+backup_directory: "/mnt/wlb_prod_backups"
 db_users:
   lima: lima
   readonly: readonly
@@ -13,6 +14,7 @@ domains:
     cname: wildeligabremen.de
     alias: www.wildeligabremen.de
   lima: manager.wildeligabremen.de
+logos_directory: "/var/lib/docker/volumes/liga-manager_logos/_data"
 versions:
   api: "1.15.0"
   mariadb: "10.11"
@@ -22,3 +24,4 @@ versions:
   wordpress: "6.4-php8.3-fpm-alpine"
 webmaster:
   mail: webmaster@gmail.com
+wp_files_directory: "/var/lib/docker/volumes/liga-manager_wp-files/_data"

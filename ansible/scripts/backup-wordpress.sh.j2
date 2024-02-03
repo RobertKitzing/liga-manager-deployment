@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-RETENTION_DAYS=90
-BACKUP_DIRECTORY=$(docker volume inspect --format '{{.Mountpoint}}' "liga-manager_backups")
-WP_FILES_DIRECTORY=$(docker volume inspect --format '{{.Mountpoint}}' "liga-manager_wp-files")
+RETENTION_DAYS=60
+BACKUP_DIRECTORY="{{ backup_directory }}"
+WP_FILES_DIRECTORY="{{ wp_files_directory }}"
 
 case $1 in
   "create")

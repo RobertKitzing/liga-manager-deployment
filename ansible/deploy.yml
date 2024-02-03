@@ -40,8 +40,8 @@
         mode: '0644'
 
     - name: Copy backup scripts
-      copy:
-        src: "scripts/{{ item }}"
+      template:
+        src: "scripts/{{ item }}.j2"
         dest: "{{ app_basedir }}/{{ item }}"
         owner: root
         group: docker
@@ -82,12 +82,7 @@
       args:
         chdir: "{{ app_basedir }}"
 
-    - name: Remove existing containers
-      command: docker compose down --remove-orphans
-      args:
-        chdir: "{{ app_basedir }}"
-
-    - name: Create new containers
+    - name: Update containers
       command: docker compose up -d
       args:
         chdir: "{{ app_basedir }}"
