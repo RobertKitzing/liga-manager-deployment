@@ -26,6 +26,12 @@
         cron_file: certbot-renew
         state: absent
 
+    - name: Remove cronjob wordpress-cron
+      cron:
+        name: wordpress-cron
+        cron_file: wordpress-cron
+        state: absent
+
     - name: Ensure application basedir is present
       file:
         path: "{{ app_basedir }}"
@@ -113,3 +119,11 @@
         user: root
         job: "cd {{ app_basedir }} && ./certbot-renew.sh > /dev/null 2>&1"
         cron_file: certbot-renew
+
+    - name: Add cronjob wordpress-cron
+      cron:
+        name: wordpress-cron
+        minute: "*/5"
+        user: root
+        job: "cd {{ app_basedir }} && docker compose exec -u www-data php wp-cron.php > /dev/null 2>&1"
+        cron_file: wordpress-cron
