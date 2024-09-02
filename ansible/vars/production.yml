@@ -16,7 +16,7 @@ domains:
   lima: manager.wildeligabremen.de
 logos_directory: "/var/lib/docker/volumes/liga-manager_logos/_data"
 versions:
-  api: "1.20.0-roadrunner"
+  api: "1.20.1-roadrunner"
   mariadb: "10.11"
   nginx: "1-alpine"
   redis: "6-alpine"
