@@ -31,6 +31,10 @@ server {
         deny all;
     }
 
+    location /.user.ini {
+        deny all;
+    }
+
     location / {
         try_files $uri $uri/ /index.php?$args;
     }
