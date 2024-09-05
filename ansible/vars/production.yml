@@ -21,7 +21,7 @@ versions:
   nginx: "1-alpine"
   redis: "6-alpine"
   ui: "latest"
-  wordpress: "6.5-php8.3-fpm-alpine"
+  wordpress: "6.6-php8.3-fpm-alpine"
 webmaster:
   mail: webmaster@gmail.com
 wp_files_directory: "/var/lib/docker/volumes/liga-manager_wp-files/_data"
