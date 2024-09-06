@@ -4,7 +4,7 @@ set -ex
 
 VOLUMES="backups certs logos mariadb wp-files"
 for volume in $VOLUMES; do
-  rsync -av \
+  rsync -av --delete \
     "root@165.22.89.194:/var/lib/docker/volumes/liga-manager_$volume/_data/" \
     "/var/lib/docker/volumes/liga-manager_$volume/_data/"
 done
