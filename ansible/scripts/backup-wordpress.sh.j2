@@ -4,13 +4,15 @@ set -e
 RETENTION_DAYS=60
 BACKUP_DIRECTORY="{{ backup_directory }}"
 WP_FILES_DIRECTORY="{{ wp_files_directory }}"
+DB_IMPORT_BIN="mysql"
+DB_EXPORT_BIN="mysqldump"
 
 case $1 in
   "create")
     find "$BACKUP_DIRECTORY" -mtime +$RETENTION_DAYS -type f -name 'wordpress-db-*.sql.gz' -delete
     find "$BACKUP_DIRECTORY" -mtime +$RETENTION_DAYS -type f -name 'wp-files-*.tar.gz' -delete
     TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
-    docker compose exec -T mariadb mysqldump --single-transaction wordpress | gzip > "$BACKUP_DIRECTORY/wordpress-db-$TIMESTAMP.sql.gz"
+    docker compose exec -T mariadb $DB_EXPORT_BIN --single-transaction wordpress | gzip > "$BACKUP_DIRECTORY/wordpress-db-$TIMESTAMP.sql.gz"
     tar -C "$WP_FILES_DIRECTORY" -czf "$BACKUP_DIRECTORY/wp-files-$TIMESTAMP.tar.gz" "."
     echo "Backup $TIMESTAMP has been created."
     ;;
@@ -21,7 +23,7 @@ case $1 in
     ;;
   "restore")
     TIMESTAMP=$2
-    zcat "$BACKUP_DIRECTORY/wordpress-db-$TIMESTAMP.sql.gz" | docker compose exec -T mariadb mysql wordpress
+    zcat "$BACKUP_DIRECTORY/wordpress-db-$TIMESTAMP.sql.gz" | docker compose exec -T mariadb $DB_IMPORT_BIN wordpress
     tar -C "$WP_FILES_DIRECTORY" -xzf "$BACKUP_DIRECTORY/wp-files-$TIMESTAMP.tar.gz"
     echo "Backup $TIMESTAMP has been restored."
     ;;
