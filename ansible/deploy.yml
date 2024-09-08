@@ -1,6 +1,6 @@
 # This playbook performs a complete deployment
-# It will rewrite configuration for all services and recreate all containers
-# Since webserver and database are restarted as well, there will be a short downtime
+# It will rewrite configuration for all services and recreate all containers if its image or config has been updated
+# This will come with be a short downtime
 - hosts: wlb-prod-01
   become: true
   vars_files:
@@ -8,29 +8,10 @@
     - vars/production.yml
 
   tasks:
-    - name: Remove cronjob backup-lima
-      cron:
-        name: backup-lima
-        cron_file: backup-lima
-        state: absent
-
-    - name: Remove cronjob backup-wordpress
-      cron:
-        name: backup-wordpress
-        cron_file: backup-wordpress
-        state: absent
-
-    - name: Remove cronjob certbot-renew
-      cron:
-        name: certbot-renew
-        cron_file: certbot-renew
-        state: absent
-
-    - name: Remove cronjob wordpress-cron
-      cron:
-        name: wordpress-cron
-        cron_file: wordpress-cron
-        state: absent
+    - name: Stop cron service
+      systemd:
+        name: cron.service
+        state: stopped
 
     - name: Ensure application basedir is present
       file:
@@ -45,7 +26,7 @@
         group: docker
         mode: '0644'
 
-    - name: Copy backup scripts
+    - name: Update utility scripts
       template:
         src: "scripts/{{ item }}.j2"
         dest: "{{ app_basedir }}/{{ item }}"
@@ -55,15 +36,6 @@
       with_items:
         - backup-lima.sh
         - backup-wordpress.sh
-
-    - name: Update utility scripts
-      template:
-        src: "scripts/{{ item }}.j2"
-        dest: "{{ app_basedir }}/{{ item }}"
-        owner: root
-        group: docker
-        mode: '0755'
-      with_items:
         - certbot-create.sh
         - certbot-renew.sh
 
@@ -93,7 +65,7 @@
       args:
         chdir: "{{ app_basedir }}"
 
-    - name: Add cronjob backup-lima
+    - name: Install backup-lima cronjob
       cron:
         name: backup-lima
         minute: "5"
@@ -102,7 +74,7 @@
         job: "cd {{ app_basedir }} && ./backup-lima.sh create > /dev/null 2>&1"
         cron_file: backup-lima
 
-    - name: Add cronjob backup-wordpress
+    - name: Install backup-wordpress cronjob
       cron:
         name: backup-wordpress
         minute: "15"
@@ -111,7 +83,7 @@
         job: "cd {{ app_basedir }} && ./backup-wordpress.sh create > /dev/null 2>&1"
         cron_file: backup-wordpress
 
-    - name: Add cronjob certbot-renew
+    - name: Install certbot-renew cronjob
       cron:
         name: certbot-renew
         minute: "25"
@@ -120,10 +92,15 @@
         job: "cd {{ app_basedir }} && ./certbot-renew.sh > /dev/null 2>&1"
         cron_file: certbot-renew
 
-    - name: Add cronjob wordpress-cron
+    - name: Install wordpress-cron cronjob
       cron:
         name: wordpress-cron
         minute: "*/5"
         user: root
         job: "cd {{ app_basedir }} && docker compose exec -u www-data php wp-cron.php > /dev/null 2>&1"
         cron_file: wordpress-cron
+
+    - name: Start cron service
+      systemd:
+        name: cron.service
+        state: started
