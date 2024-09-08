@@ -2,6 +2,13 @@
 admin_users: ['marius', 'robert']
 app_basedir: "/opt/liga-manager"
 apt_packages: ['containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'docker-compose-plugin', 'git', 'fail2ban', 'ufw', 'vim']
+authorized_keys:
+  - user: marius
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP/ndpl3DMWBoEn63M8g3O8pf1BuoANBKmKkLMvYFiMT marius@marius-ideapad-5-pro"
+  - user: marius
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJss4TEybeZF4EkQg6qDABkG69Nsj8LGO0J0N5L6gEfe mklocke@maxcluster.de"
+  - user: robert
+    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC06Fp366uT3Y/eLYKH2tcWb+or06lU0iKxYtmDuWFvmMjEoWU2/OQ4u84mrpspLCWmbhc4CjcFbeQ8rTXEwzxKjsq9uf6TZ/f1OXJUFCnDe+mCdgXdZ5deOAKdWEU9T0o2zwKvtoU4x5jQTrBEjPmQG2zGby+wf3zPhuGOTZqVSXjJm/AvCaSVST2PMpHXSahLmT30PmZD/qId97DdjEaoXjL4wHNs14Q2LeTNAuSu9XnjqejVNAsRaHWfOdK0EgPGt9XhNUBqtEieWGuSS5fXTKHe6hwJxgW489FbSEuVVw2te91gH5T56uXmD3xRZyqfJWSkuVbUxFzMztGZD5bcd51ZhhcvW44CPEfnnkIK7YN5jdusTXAZAVBW8fbA3Fw+mGDG8ND+P4nx1En1R5euvoW2Eo5PFgcz5GJSmEm68QHytwM3BVLe8KHbc1oA/VFCSfJE+WCf1AvmgfXVi+EcRW1NCTGfXQAHFPRjQBnfLo7HhGQQdLSz3nrtdmWIHPc= rkitz@robert-yoga6"
 backup_directory: "/mnt/wlb_prod_backups"
 db_users:
   lima: lima

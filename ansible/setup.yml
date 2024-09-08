@@ -10,13 +10,20 @@
         name: docker
         state: present
 
-    - name: Make sure users are present
+    - name: Configure admin users
       user:
         name: "{{ item }}"
         shell: /bin/bash
         groups: docker,sudo,admin
         append: yes
       with_items: "{{ admin_users }}"
+
+    - name: Configure authorized keys for SSH
+      authorized_key:
+        user: "{{ item.user }}"
+        key: "{{ item.key }}"
+        state: present
+      with_items: "{{ authorized_keys }}"
 
     - name: Enable sudo without using password for sudo group
       lineinfile:
@@ -41,7 +48,7 @@
         regexp: '^#?PermitRootLogin'
         line: 'PermitRootLogin prohibit-password'
 
-    - name: Add GPG keys for apt repositories
+    - name: Configure GPG keys for apt repositories
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
