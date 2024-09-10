@@ -43,26 +43,14 @@ $ ansible-playbook -i inventory/production rolling-upgrade.yml
 
 ## Maintenance modes
 
-### Wordpress
-
-Use the following commands inside the `wordpress` container.
+Use the following commands to enable or disable maintenance mode for `wordpress` and `api`
 
 ```bash
-# Enable
-$ echo '<?php $upgrading = time(); ?>' > .maintenance
+# Enable maintenance modes
+$ docker compose exec api touch .maintenance
+$ docker compose exec wordpress sh -c "echo '<?php \$upgrading = time();' > .maintenance"
 
-# Disable
-$ rm .maintenance
-```
-
-### Liga Manager
-
-Use the following commands inside the `api` container.
-
-```bash
-# Enable
-$ lima app:maintenance --mode=on
-
-# Disable
-$ lima app:maintenance --mode=off
+# Disable maintenance modes
+$ docker compose exec api rm .maintenance
+$ docker compose exec wordpress rm .maintenance
 ```
