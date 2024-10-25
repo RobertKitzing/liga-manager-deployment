@@ -13,7 +13,7 @@ services:
       mariadb:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
     env_file:
       - ./api.env
   mariadb:
@@ -63,6 +63,12 @@ services:
     restart: always
     ports:
       - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "PING" ]
+      start_period: 1m
+      start_interval: 5s
+      interval: 1m
+      timeout: 5s
 
 volumes:
   mariadb:
