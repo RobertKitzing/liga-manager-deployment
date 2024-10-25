@@ -1,5 +1,5 @@
 # This playbook contains setup steps to be applied on new servers
-- hosts: wlb-prod-01
+- hosts: wlb-prod-ubu24
   become: true
   vars_files:
     - vars/production.yml
@@ -55,7 +55,7 @@
 
     - name: Configure apt repositories
       apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        repo: deb https://download.docker.com/linux/ubuntu noble stable
         state: present
 
     - name: Update apt cache

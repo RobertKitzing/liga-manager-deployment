@@ -1,5 +1,5 @@
 # This playbook upgrades packages using "apt" and reboots the host if required
-- hosts: wlb-prod-01
+- hosts: wlb-prod-ubu24
   become: true
 
   tasks:

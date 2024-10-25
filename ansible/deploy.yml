@@ -1,7 +1,7 @@
 # This playbook performs a complete deployment
 # It will rewrite configuration for all services and recreate all containers if its image or config has been updated
 # This will come with be a short downtime
-- hosts: wlb-prod-01
+- hosts: wlb-prod-ubu24
   become: true
   vars_files:
     - secrets/production.yml

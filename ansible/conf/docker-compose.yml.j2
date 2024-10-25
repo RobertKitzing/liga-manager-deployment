@@ -29,10 +29,10 @@ services:
       - "127.0.0.1:3306:3306"
     volumes:
       - mariadb:/var/lib/mysql
-      - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
+    #  - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
       - ./my.cnf:/root/.my.cnf:ro
-    environment:
-      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
+    #environment:
+    #  - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
     healthcheck:
       test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       start_period: 1m
