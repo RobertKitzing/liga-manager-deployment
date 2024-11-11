@@ -74,13 +74,6 @@ server {
 
     client_max_body_size 64M;
 
-    location /ws {
-        proxy_pass http://ui:3098/ws;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "Upgrade";
-    }
-
     location /api {
         proxy_pass http://api:8080;
         proxy_set_header Host $host;
@@ -95,6 +88,7 @@ server {
     }
 
     location / {
-        proxy_pass http://ui:3098;
+        root /var/www/ui;
+        try_files $uri /index.html;
     }
 }

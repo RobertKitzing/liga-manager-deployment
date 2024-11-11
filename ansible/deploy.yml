@@ -45,7 +45,7 @@
         dest: "{{ app_basedir }}/{{ item }}"
         owner: root
         group: docker
-        mode: '0640'
+        mode: '0644'
       with_items:
         - docker-compose.yml
         - nginx.conf
@@ -54,6 +54,7 @@
         - ui.env
         - wordpress.env
         - my.cnf
+        - appsettings.json
 
     - name: Pull container images
       command: docker compose pull

@@ -1,9 +1,4 @@
 services:
-  ui:
-    image: robertkitzing/liga-manager-ui:{{versions.ui}}
-    restart: always
-    env_file:
-      - ./ui.env
   api:
     image: mklocke/liga-manager-api:{{versions.api}}
     restart: always
@@ -40,7 +35,11 @@ services:
       interval: 1m
       timeout: 5s
   nginx:
-    image: nginx:{{versions.nginx}}
+    build:
+      dockerfile_inline: |
+        FROM robertkitzing/liga-manager-ui:{{versions.ui}} as source
+        FROM nginx:{{versions.nginx}}
+        COPY --from=source /usr/src/app/www /var/www/ui
     restart: always
     ports:
       - "80:80/tcp"
@@ -51,10 +50,12 @@ services:
       - certs:/etc/letsencrypt
       - wp-files:/var/www/html
       - logos:/var/www/logos:ro
+      - ./appsettings.json:/var/www/ui/appsettings.json:ro
     depends_on:
-      - ui
       - api
       - wordpress
+    env_file:
+      - ./ui.env
   wordpress:
     image: wordpress:{{versions.wordpress}}
     restart: always
