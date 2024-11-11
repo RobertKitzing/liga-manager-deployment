@@ -1,0 +1,17 @@
+# Migrate volumes from one host to another
+- hosts: wlb-test-ubu24
+  become: true
+
+  tasks:
+    - name: Migrate volumes
+      synchronize:
+        src: /var/lib/docker/volumes/liga-manager_{{ item }}/_data/
+        dest: /var/lib/docker/volumes/liga-manager_{{ item }}/_data/
+        archive: true
+        delete: true
+      delegate_to: wlb-prod-ubu24
+      with_items:
+        - certs
+        - logos
+        - mariadb
+        - wp-files
