@@ -48,15 +48,30 @@
         regexp: '^#?PermitRootLogin'
         line: 'PermitRootLogin prohibit-password'
 
-    - name: Configure GPG keys for apt repositories
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
+    - name: Download GPG keys for apt repositories
+      get_url:
+        url: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      with_items:
+        - { src: "https://download.docker.com/linux/ubuntu/gpg", dest: "/tmp/docker.gpg" }
+        - { src: "https://keys.datadoghq.com/DATADOG_APT_KEY_CURRENT.public", dest: "/tmp/datadog.gpg" }
 
-    - name: Configure apt repositories
+    - name: Import GPG keys into keyring
+      command: "gpg --batch --no-default-keyring --keyring {{ item.keyring }} --import {{ item.key }}"
+      with_items:
+        - { key: "/tmp/docker.gpg", keyring: "/usr/share/keyrings/docker-keyring.gpg" }
+        - { key: "/tmp/datadog.gpg", keyring: "/usr/share/keyrings/datadog-archive-keyring.gpg"}
+
+    - name: Register apt repositories
       apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu noble stable
-        state: present
+        repo: "{{ item.repo }}"
+        filename: "{{ item.filename }}"
+        update_cache: false
+      with_items:
+        - repo: "deb [signed-by=/usr/share/keyrings/docker-keyring.gpg] https://download.docker.com/linux/ubuntu noble stable"
+          filename: "docker"
+        - repo: "deb [signed-by=/usr/share/keyrings/datadog-archive-keyring.gpg] https://apt.vector.dev/ stable vector-0"
+          filename: "vector"
 
     - name: Update apt cache
       apt: update_cache=yes

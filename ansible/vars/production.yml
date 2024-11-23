@@ -1,7 +1,7 @@
 ---
 admin_users: ['marius', 'robert']
 app_basedir: "/opt/liga-manager"
-apt_packages: ['containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'docker-compose-plugin', 'git', 'fail2ban', 'ufw', 'vim']
+apt_packages: ['containerd.io', 'curl', 'docker-ce', 'docker-ce-cli', 'docker-compose-plugin', 'git', 'fail2ban', 'ufw', 'vector', 'vim']
 authorized_keys:
   - user: marius
     key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP/ndpl3DMWBoEn63M8g3O8pf1BuoANBKmKkLMvYFiMT marius@marius-ideapad-5-pro"
