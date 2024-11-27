@@ -1,0 +1,7 @@
+#!/bin/sh
+/usr/sbin/sendmail \
+  -t \
+  -H 'openssl s_client -quiet -connect {{email_gateway_host}}:{{email_gateway_port}}' \
+  -au{{email_gateway_username}} \
+  -ap{{email_gateway_password}} \
+  -f {{email_sender_address}}

@@ -14,6 +14,9 @@ db_users:
   lima: lima
   readonly: readonly
   wordpress: wordpress
+email_gateway_username: noreply@wildeligabremen.de
+email_gateway_host: smtp.goneo.de
+email_gateway_port: 465
 email_sender_address: noreply@wildeligabremen.de
 email_sender_name: Wilde Liga Bremen
 domains:

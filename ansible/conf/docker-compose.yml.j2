@@ -61,6 +61,8 @@ services:
     restart: always
     volumes:
       - wp-files:/var/www/html
+      - ./php.ini:/usr/local/etc/php/php.ini:ro
+      - ./sendmail.sh:/usr/local/bin/sendmail:ro
     env_file:
       - ./wordpress.env
     depends_on:
