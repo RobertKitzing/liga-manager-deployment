@@ -58,15 +58,21 @@
         - appsettings.json
         - php.ini
 
-    - name: Pull container images
+    - name: Pull images
       command: docker compose pull
       args:
         chdir: "{{ app_basedir }}"
 
-    - name: Update containers
-      command: docker compose up -d
+    - name: Update services
+      command: "docker compose up -d --wait {{ item }}"
       args:
         chdir: "{{ app_basedir }}"
+      with_items:
+        - redis
+        - mariadb
+        - nginx
+        - api
+        - wordpress
 
     - name: Install backup-lima cronjob
       cron:
