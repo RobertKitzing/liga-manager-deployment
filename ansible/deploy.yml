@@ -54,19 +54,17 @@
         - api.env
         - ui.env
         - wordpress.env
-        - my.cnf
         - appsettings.json
         - php.ini
 
-    - name: Pull images
-      command: docker compose pull
-      args:
-        chdir: "{{ app_basedir }}"
-
     - name: Update services
-      command: "docker compose up -d --wait {{ item }}"
-      args:
-        chdir: "{{ app_basedir }}"
+      community.docker.docker_compose_v2:
+        pull: always
+        project_src: "{{ app_basedir }}"
+        services:
+          - "{{ item }}"
+        state: present
+        wait: true
       with_items:
         - redis
         - mariadb

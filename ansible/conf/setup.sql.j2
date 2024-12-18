@@ -1,4 +1,4 @@
-ALTER USER 'root'@'localhost' IDENTIFIED BY '{{db_passwords.root}}';
+ALTER USER 'root'@'localhost' IDENTIFIED VIA unix_socket;
 ALTER USER 'root'@'%' IDENTIFIED BY '{{db_passwords.root}}';
 
 CREATE DATABASE IF NOT EXISTS lima;
