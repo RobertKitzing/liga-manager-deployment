@@ -5,8 +5,8 @@ set -e
 RETENTION_DAYS=60
 BACKUP_DIRECTORY="{{ backup_directory }}"
 LOGOS_DIRECTORY="{{ logos_directory }}"
-DB_IMPORT_BIN="mysql"
-DB_EXPORT_BIN="mysqldump"
+DB_IMPORT_BIN="mariadb"
+DB_EXPORT_BIN="mariadb-dump"
 
 case $1 in
   "create")

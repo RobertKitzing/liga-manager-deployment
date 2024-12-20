@@ -4,8 +4,8 @@ set -e
 RETENTION_DAYS=60
 BACKUP_DIRECTORY="{{ backup_directory }}"
 WP_FILES_DIRECTORY="{{ wp_files_directory }}"
-DB_IMPORT_BIN="mysql"
-DB_EXPORT_BIN="mysqldump"
+DB_IMPORT_BIN="mariadb"
+DB_EXPORT_BIN="mariadb-dump"
 
 case $1 in
   "create")

@@ -27,7 +27,7 @@ domains:
 logos_directory: "/var/lib/docker/volumes/liga-manager_logos/_data"
 versions:
   api: "1.22.1-roadrunner"
-  mariadb: "10.11"
+  mariadb: "11.4"
   nginx: "1-alpine"
   redis: "6-alpine"
   ui: "latest"
