@@ -36,9 +36,10 @@ services:
   nginx:
     build:
       dockerfile_inline: |
-        FROM robertkitzing/liga-manager-ui:{{versions.ui}} as source
+        FROM robertkitzing/liga-manager-ui:{{versions.ui}} AS source
         FROM nginx:{{versions.nginx}}
         COPY --from=source /usr/src/app/www /var/www/ui
+      pull: true
     restart: always
     ports:
       - "80:80/tcp"
