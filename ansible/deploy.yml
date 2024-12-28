@@ -68,9 +68,9 @@
       with_items:
         - redis
         - mariadb
-        - nginx
         - api
         - wordpress
+        - nginx
 
     - name: Install backup-lima cronjob
       cron:
