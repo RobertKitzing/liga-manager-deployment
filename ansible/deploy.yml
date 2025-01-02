@@ -13,10 +13,34 @@
         name: cron.service
         state: stopped
 
-    - name: Ensure application basedir is present
+    - name: Ensure base dir is present
       file:
         path: "{{ app_basedir }}"
         state: directory
+
+    - name: Ensure secrets dir is present
+      file:
+        path: "{{ app_basedir }}/secrets"
+        state: directory
+
+    - name: Write secrets
+      copy:
+        content: "{{ item.content }}"
+        dest: "{{ app_basedir }}/secrets/{{ item.file }}"
+        owner: root
+        group: docker
+        mode: '0644'
+      with_items:
+        - file: email-password
+          content: "{{ email_gateway_password }}"
+        - file: jwt-secret
+          content: "{{ jwt_secret }}"
+        - file: lima-db-password
+          content: "{{ db_passwords.lima }}"
+        - file: root-db-password
+          content: "{{ db_passwords.root }}"
+        - file: wordpress-db-password
+          content: "{{ db_passwords.wordpress }}"
 
     - name: Update setup.sql
       template:
@@ -51,9 +75,6 @@
         - docker-compose.yml
         - nginx.conf
         - nginx-ssl.conf
-        - api.env
-        - ui.env
-        - wordpress.env
         - appsettings.json
         - php.ini
 

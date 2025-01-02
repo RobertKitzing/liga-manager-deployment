@@ -9,8 +9,24 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    env_file:
-      - ./api.env
+    environment:
+      - APP_BASE_URL=https://{{domains.lima}}
+      - DB_PASSWORD_FILE=/run/secrets/db-password
+      - DB_URL=pdo-mysql://{{db_users.lima}}@mariadb/lima
+      - EMAIL_PASSWORD_FILE=/run/secrets/email-password
+      - EMAIL_SENDER_ADDRESS={{email_sender_address}}
+      - EMAIL_SENDER_NAME={{email_sender_name}}
+      - EMAIL_URL=smtps://{{email_gateway_username}}@{{email_gateway_host}}:{{email_gateway_port}}
+      - JWT_SECRET_FILE=/run/secrets/jwt-secret
+      - LOG_LEVEL=notice
+      - REDIS_HOST=redis
+    secrets:
+      - source: lima-db-password
+        target: db-password
+      - source: jwt-secret
+        target: jwt-secret
+      - source: email-password
+        target: email-password
     healthcheck:
       test: [ "CMD", "docker-php-healthcheck", "http", "127.0.0.1", "8080" ]
       start_period: 1m
@@ -25,8 +41,11 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     #  - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
-    #environment:
-    #  - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
+    environment:
+      - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/root-password
+    secrets:
+      - source: root-db-password
+        target: root-password
     healthcheck:
       test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       start_period: 1m
@@ -54,8 +73,6 @@ services:
     depends_on:
       - api
       - wordpress
-    env_file:
-      - ./ui.env
   wordpress:
     image: wordpress:{{versions.wordpress}}
     restart: always
@@ -63,8 +80,13 @@ services:
       - wp-files:/var/www/html
       - ./php.ini:/usr/local/etc/php/php.ini:ro
       - ./sendmail.sh:/usr/local/bin/sendmail:ro
-    env_file:
-      - ./wordpress.env
+    environment:
+      - WORDPRESS_DB_HOST=mariadb
+      - WORDPRESS_DB_PASSWORD_FILE=/run/secrets/db-password
+      - WORDPRESS_DB_USER={{db_users.wordpress}}
+    secrets:
+      - source: wordpress-db-password
+        target: db-password
     depends_on:
       - mariadb
   redis:
@@ -78,6 +100,18 @@ services:
       start_interval: 5s
       interval: 1m
       timeout: 5s
+
+secrets:
+  email-password:
+    file: ./secrets/email-password
+  jwt-secret:
+    file: ./secrets/jwt-secret
+  lima-db-password:
+    file: ./secrets/lima-db-password
+  root-db-password:
+    file: ./secrets/root-db-password
+  wordpress-db-password:
+    file: ./secrets/wordpress-db-password
 
 volumes:
   mariadb:
