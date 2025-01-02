@@ -48,6 +48,16 @@
         regexp: '^#?PermitRootLogin'
         line: 'PermitRootLogin prohibit-password'
 
+    - name: Ensure docker config dir exists
+      file:
+        path: /etc/docker
+        state: directory
+
+    - name: Copy docker daemon.json
+      copy:
+        src: "conf/daemon.json"
+        dest: "/etc/docker/daemon.json"
+
     - name: Download GPG keys for apt repositories
       get_url:
         url: "{{ item.src }}"
