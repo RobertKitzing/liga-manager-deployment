@@ -5,13 +5,13 @@
   tasks:
     - name: Migrate volumes
       synchronize:
-        src: /var/lib/docker/volumes/liga-manager_{{ item }}/_data/
-        dest: /var/lib/docker/volumes/liga-manager_{{ item }}/_data/
+        src: {{ item }}/
+        dest: {{ item }}/
         archive: true
         delete: true
       delegate_to: wlb-prod-ubu24
       with_items:
-        - certs
-        - logos
-        - mariadb
-        - wp-files
+        - {{ volumes.certs.path }}
+        - {{ volumes.logos.path }}
+        - {{ volumes.mariadb.path }}
+        - {{ volumes.wp-files.path }}

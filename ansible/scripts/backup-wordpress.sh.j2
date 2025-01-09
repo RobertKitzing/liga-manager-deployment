@@ -3,7 +3,7 @@ set -e
 
 RETENTION_DAYS=60
 BACKUP_DIRECTORY="{{ backup_directory }}"
-WP_FILES_DIRECTORY="{{ wp_files_directory }}"
+WP_FILES_DIRECTORY="{{ volumes.wp_files.path }}"
 DB_IMPORT_BIN="mariadb"
 DB_EXPORT_BIN="mariadb-dump"
 

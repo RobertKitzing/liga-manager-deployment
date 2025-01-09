@@ -4,7 +4,7 @@ set -e
 
 RETENTION_DAYS=60
 BACKUP_DIRECTORY="{{ backup_directory }}"
-LOGOS_DIRECTORY="{{ logos_directory }}"
+LOGOS_DIRECTORY="{{ volumes.logos.path }}"
 DB_IMPORT_BIN="mariadb"
 DB_EXPORT_BIN="mariadb-dump"
 

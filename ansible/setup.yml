@@ -58,6 +58,16 @@
         src: "conf/daemon.json"
         dest: "/etc/docker/daemon.json"
 
+    - name: Configure sub user IDs
+      copy:
+        content: "dockremap:100000:65536"
+        dest: "/etc/subuid"
+
+    - name: Configure sub group IDs
+      copy:
+        content: "dockremap:100000:65536"
+        dest: "/etc/subgid"
+
     - name: Download GPG keys for apt repositories
       get_url:
         url: "{{ item.src }}"

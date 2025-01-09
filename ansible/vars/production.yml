@@ -24,7 +24,6 @@ domains:
     cname: wildeligabremen.de
     alias: www.wildeligabremen.de
   lima: manager.wildeligabremen.de
-logos_directory: "/var/lib/docker/volumes/liga-manager_logos/_data"
 versions:
   api: "1.23.1-roadrunner"
   mariadb: "11.4"
@@ -32,6 +31,14 @@ versions:
   redis: "6-alpine"
   ui: "latest"
   wordpress: "6.7-php8.3-fpm-alpine"
+volumes:
+  certs:
+    path: "/var/lib/docker/100000.100000/volumes/liga-manager_certs/_data"
+  logos:
+    path: "/var/lib/docker/100000.100000/volumes/liga-manager_logos/_data"
+  mariadb:
+    path: "/var/lib/docker/100000.100000/volumes/liga-manager_mariadb/_data"
+  wp-files:
+    path: "/var/lib/docker/100000.100000/volumes/liga-manager_wp-files/_data"
 webmaster:
   mail: webmaster@gmail.com
-wp_files_directory: "/var/lib/docker/volumes/liga-manager_wp-files/_data"
