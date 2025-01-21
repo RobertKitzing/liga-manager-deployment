@@ -2,6 +2,8 @@ services:
   api:
     image: mklocke/liga-manager-api:{{versions.api}}
     restart: always
+    ports:
+      - "127.0.0.1:8081:8081"
     volumes:
       - logos:/var/www/logos
     depends_on:
