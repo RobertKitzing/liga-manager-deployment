@@ -121,5 +121,6 @@ server {
     listen 8082;
     location /_status {
         stub_status;
+        access_log off;
     }
 }
