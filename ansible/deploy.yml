@@ -62,7 +62,6 @@
         - backup-wordpress.sh
         - certbot-create.sh
         - certbot-renew.sh
-        - sendmail.sh
 
     - name: Update config files
       template:
