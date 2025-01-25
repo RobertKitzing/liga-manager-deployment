@@ -81,8 +81,13 @@ services:
     volumes:
       - wp-files:/var/www/html
       - ./php.ini:/usr/local/etc/php/php.ini:ro
-      - ./sendmail.sh:/usr/local/bin/sendmail:ro
     environment:
+      - EMAIL_GATEWAY_HOST={{email_gateway_host}}
+      - EMAIL_GATEWAY_PORT={{email_gateway_port}}
+      - EMAIL_GATEWAY_USERNAME={{email_gateway_username}}
+      - EMAIL_GATEWAY_PASSWORD={{email_gateway_password}}
+      - EMAIL_SENDER_ADDRESS={{email_sender_address}}
+      - EMAIL_SENDER_NAME={{email_sender_name}}
       - WORDPRESS_DB_HOST=mariadb
       - WORDPRESS_DB_PASSWORD_FILE=/run/secrets/db-password
       - WORDPRESS_DB_USER={{db_users.wordpress}}
