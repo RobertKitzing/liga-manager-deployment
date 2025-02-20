@@ -40,6 +40,10 @@ server {
     gzip on;
     gzip_types application/json application/javascript image/png application/font-woff2 image/x-icon text/css application/octet-stream;
 
+    location /.well-known/acme-challenge {
+        alias /var/www/.well-known/acme-challenge;
+    }
+
     location ~ ^/xmlrpc {
         deny all;
     }
@@ -84,6 +88,10 @@ server {
     gzip_types application/json application/javascript image/png application/font-woff2 image/x-icon;
 
     client_max_body_size 64M;
+
+    location /.well-known/acme-challenge {
+        alias /var/www/.well-known/acme-challenge;
+    }
 
     location /429.json {
         internal;

@@ -1,4 +1,4 @@
 #!/bin/sh
 
-docker compose exec -T nginx apk add certbot certbot-nginx
-docker compose exec -T nginx certbot --nginx renew
+docker compose exec -T nginx apk add certbot
+docker compose exec -T nginx certbot renew --webroot --webroot-path /var/www
