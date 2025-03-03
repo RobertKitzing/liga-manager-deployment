@@ -26,7 +26,7 @@ domains:
   lima: manager.wildeligabremen.de
 versions:
   api: "1.24.0-roadrunner"
-  mariadb: "11.4"
+  mariadb: "11.4.4"
   nginx: "1-alpine"
   redis: "6-alpine"
   ui: "latest"
