@@ -17,6 +17,11 @@
       file:
         path: "{{ app_basedir }}"
         state: directory
+    
+    - name: Ensure backups dir is present
+      file:
+        path: "{{ backup_directory }}"
+        state: directory
 
     - name: Ensure secrets dir is present
       file:
