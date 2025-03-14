@@ -2,39 +2,43 @@
 # It will rewrite configuration for all services and recreate all containers if its image or config has been updated
 # This will come with be a short downtime
 - hosts: wlb-prod-ubu24
-  become: true
   vars_files:
     - secrets/production.yml
     - vars/production.yml
 
   tasks:
     - name: Stop cron service
+      become: true
       systemd:
         name: cron.service
         state: stopped
 
     - name: Ensure base dir is present
+      become: true
       file:
         path: "{{ app_basedir }}"
         state: directory
+        group: docker
+        mode: '2775'
     
     - name: Ensure backups dir is present
       file:
         path: "{{ backup_directory }}"
         state: directory
+        group: docker
+        mode: '2775'
 
     - name: Ensure secrets dir is present
       file:
         path: "{{ app_basedir }}/secrets"
         state: directory
+        group: docker
+        mode: '2775'
 
     - name: Write secrets
       copy:
         content: "{{ item.content }}"
         dest: "{{ app_basedir }}/secrets/{{ item.file }}"
-        owner: root
-        group: docker
-        mode: '0644'
       with_items:
         - file: email-password
           content: "{{ email_gateway_password }}"
@@ -51,17 +55,12 @@
       template:
         src: conf/setup.sql.j2
         dest: "{{ app_basedir }}/setup.sql"
-        owner: root
-        group: docker
-        mode: '0644'
 
     - name: Update utility scripts
       template:
         src: "scripts/{{ item }}.j2"
         dest: "{{ app_basedir }}/{{ item }}"
-        owner: root
-        group: docker
-        mode: '0755'
+        mode: '0775'
       with_items:
         - backup-lima.sh
         - backup-wordpress.sh
@@ -72,9 +71,6 @@
       template:
         src: "conf/{{ item }}.j2"
         dest: "{{ app_basedir }}/{{ item }}"
-        owner: root
-        group: docker
-        mode: '0644'
       with_items:
         - docker-compose.yml
         - nginx.conf
@@ -99,6 +95,7 @@
         - nginx
 
     - name: Install backup-lima cronjob
+      become: true
       cron:
         name: backup-lima
         minute: "5"
@@ -108,6 +105,7 @@
         cron_file: backup-lima
 
     - name: Install backup-wordpress cronjob
+      become: true
       cron:
         name: backup-wordpress
         minute: "15"
@@ -117,6 +115,7 @@
         cron_file: backup-wordpress
 
     - name: Install certbot-renew cronjob
+      become: true
       cron:
         name: certbot-renew
         minute: "25"
@@ -126,6 +125,7 @@
         cron_file: certbot-renew
 
     - name: Install wordpress-cron cronjob
+      become: true
       cron:
         name: wordpress-cron
         minute: "*/5"
@@ -134,6 +134,7 @@
         cron_file: wordpress-cron
 
     - name: Start cron service
+      become: true
       systemd:
         name: cron.service
         state: started
