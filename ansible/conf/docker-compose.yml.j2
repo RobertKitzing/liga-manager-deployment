@@ -20,7 +20,7 @@ services:
       - EMAIL_SENDER_NAME={{email_sender_name}}
       - EMAIL_URL=smtps://{{email_gateway_username}}@{{email_gateway_host}}:{{email_gateway_port}}
       - JWT_SECRET_FILE=/run/secrets/jwt-secret
-      - LOG_LEVEL=notice
+      - LOG_LEVEL=info
       - REDIS_HOST=redis
     secrets:
       - source: lima-db-password
