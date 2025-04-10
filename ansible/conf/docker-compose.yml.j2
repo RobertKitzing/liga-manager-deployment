@@ -74,8 +74,10 @@ services:
       - logos:/var/www/logos:ro
       - ./appsettings.json:/var/www/ui/appsettings.json:ro
     depends_on:
-      - api
-      - wordpress
+      api:
+        condition: service_healthy
+      wordpress:
+        condition: service_started
   wordpress:
     image: wordpress:{{versions.wordpress}}
     restart: always
@@ -96,7 +98,8 @@ services:
       - source: wordpress-db-password
         target: db-password
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
   redis:
     image: redis:{{versions.redis}}
     restart: always
