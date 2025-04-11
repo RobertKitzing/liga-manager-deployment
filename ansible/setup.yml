@@ -103,5 +103,42 @@
     - name: Install packages
       apt: name={{ apt_packages }} state=latest
 
-    - name: Reboot machine
-      reboot:
+    - name: Ensure app dirs are present
+      file:
+        path: "{{ item }}"
+        state: directory
+        group: docker
+        mode: '2775'
+      with_items:
+        - "{{ app_basedir }}"
+        - "{{ app_basedir }}/backups"
+        - "{{ app_basedir }}/secrets"
+
+    - name: Install cronjobs
+      cron:
+        name: "{{ item.name }}"
+        minute: "{{ item.minute }}"
+        hour: "{{ item.hour }}"
+        user: "{{ item.user }}"
+        job: "{{ item.job }}"
+        cron_file: "{{ item.name }}"
+      with_items:
+        - name: backup-lima
+          minute: "5"
+          hour: "4"
+          user: root
+          job: "cd {{ app_basedir }} && ./backup-lima.sh create > /dev/null 2>&1"
+        - name: backup-wordpress
+          minute: "15"
+          hour: "4"
+          user: root
+          job: "cd {{ app_basedir }} && ./backup-wordpress.sh create > /dev/null 2>&1"
+        - name: certbot-renew
+          minute: "25"
+          hour: "4"
+          user: root
+          job: "cd {{ app_basedir }} && ./certbot-renew.sh > /dev/null 2>&1"
+        - name: wordpress-cron
+          minute: "*/5"
+          user: root
+          job: "cd {{ app_basedir }} && docker compose exec -u www-data php wp-cron.php > /dev/null 2>&1"
