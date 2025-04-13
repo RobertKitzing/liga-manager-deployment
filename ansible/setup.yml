@@ -127,18 +127,19 @@
           minute: "5"
           hour: "4"
           user: root
-          job: "cd {{ app_basedir }} && ./backup-lima.sh create > /dev/null 2>&1"
+          job: "cd {{ app_basedir }} && ./backup-lima.sh create 2>&1 | logger -t backup-lima"
         - name: backup-wordpress
           minute: "15"
           hour: "4"
           user: root
-          job: "cd {{ app_basedir }} && ./backup-wordpress.sh create > /dev/null 2>&1"
+          job: "cd {{ app_basedir }} && ./backup-wordpress.sh create 2>&1 | logger -t backup-wordpress"
         - name: certbot-renew
           minute: "25"
           hour: "4"
           user: root
-          job: "cd {{ app_basedir }} && ./certbot-renew.sh > /dev/null 2>&1"
+          job: "cd {{ app_basedir }} && ./certbot-renew.sh 2>&1 | logger -t certbot-renew"
         - name: wordpress-cron
           minute: "*/5"
+          hour: "*"
           user: root
-          job: "cd {{ app_basedir }} && docker compose exec -u www-data wordpress php wp-cron.php > /dev/null 2>&1"
+          job: "cd {{ app_basedir }} && docker compose exec -u www-data wordpress php wp-cron.php 2>&1 | logger -t wordpress-cron"
