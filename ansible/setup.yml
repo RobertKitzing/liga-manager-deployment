@@ -141,4 +141,4 @@
         - name: wordpress-cron
           minute: "*/5"
           user: root
-          job: "cd {{ app_basedir }} && docker compose exec -u www-data php wp-cron.php > /dev/null 2>&1"
+          job: "cd {{ app_basedir }} && docker compose exec -u www-data wordpress php wp-cron.php > /dev/null 2>&1"
