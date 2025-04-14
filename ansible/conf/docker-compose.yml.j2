@@ -100,6 +100,12 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "127.0.0.1", "9000"]
+      start_period: 1m
+      start_interval: 5s
+      interval: 1m
+      timeout: 5s
   redis:
     image: redis:{{versions.redis}}
     restart: always
