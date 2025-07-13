@@ -78,6 +78,12 @@ services:
         condition: service_healthy
       wordpress:
         condition: service_started
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "127.0.0.1", "443" ]
+      start_period: 1m
+      start_interval: 5s
+      interval: 1m
+      timeout: 5s
   wordpress:
     image: wordpress:{{versions.wordpress}}
     restart: always
