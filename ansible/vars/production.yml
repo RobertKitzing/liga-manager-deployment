@@ -28,7 +28,7 @@ versions:
   api: "1.25.4-roadrunner"
   mariadb: "11.4.4"
   nginx: "1-alpine"
-  redis: "6-alpine"
+  redis: "8-alpine"
   ui: "latest"
   wordpress: "6.8-php8.4-fpm-alpine"
 volumes:
