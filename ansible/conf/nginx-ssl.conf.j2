@@ -119,6 +119,11 @@ server {
         alias /var/www/logos;
     }
 
+    location /imgproxy {
+        rewrite /imgproxy/(.*) /$1 break;
+        proxy_pass http://imgproxy:8080;
+    }
+
     location / {
         root /var/www/ui;
         try_files $uri /index.html;

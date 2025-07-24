@@ -64,4 +64,5 @@
         - mariadb
         - api
         - wordpress
+        - imgproxy
         - nginx

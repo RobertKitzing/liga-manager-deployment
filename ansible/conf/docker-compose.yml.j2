@@ -123,6 +123,23 @@ services:
       start_interval: 5s
       interval: 1m
       timeout: 5s
+  imgproxy:
+    image: ghcr.io/imgproxy/imgproxy:{{versions.imgproxy}}
+    restart: always
+    volumes:
+      - logos:/logos:ro
+    environment:
+      IMGPROXY_USE_ETAG: false
+      IMGPROXY_ALLOWED_SOURCES: local://
+      IMGPROXY_LOCAL_FILESYSTEM_ROOT: /logos
+      IMGPROXY_AUTO_AVIF: true
+      IMGPROXY_AUTO_WEBP: true
+    healthcheck:
+      test: [ "CMD", "imgproxy", "health" ]
+      start_period: 1m
+      start_interval: 5s
+      interval: 1m
+      timeout: 5s
 
 secrets:
   email-password:
