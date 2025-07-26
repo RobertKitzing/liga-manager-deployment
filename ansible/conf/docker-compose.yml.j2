@@ -127,6 +127,7 @@ services:
     restart: always
     volumes:
       - logos:/lima/logos:ro
+      - assets:/lima/assets:ro
     environment:
       IMGPROXY_USE_ETAG: false
       IMGPROXY_ALLOWED_SOURCES: local://
@@ -139,7 +140,14 @@ services:
       start_interval: 5s
       interval: 1m
       timeout: 5s
-
+  liga-manager-ui:
+    image: robertkitzing/liga-manager-ui:next
+    restart: always
+    environment:
+      GOOGLE_MAPS_API_KEY: ""
+      IMG_PROXY_HOST: imgproxy
+    volumes:
+      - assets:/ui/browser/assets
 secrets:
   email-password:
     file: ./secrets/email-password
@@ -157,3 +165,4 @@ volumes:
   wp-files:
   certs:
   logos:
+  assets:
