@@ -115,8 +115,9 @@ server {
         error_page 502 /502.json;
     }
 
-    location /logos {
-        alias /var/www/logos;
+    location / {
+        root /var/www/ui;
+        try_files $uri /index.html;
     }
 
     location /imgproxy {
@@ -124,10 +125,6 @@ server {
         proxy_pass http://imgproxy:8080;
     }
 
-    location / {
-        root /var/www/ui;
-        try_files $uri /index.html;
-    }
 }
 
 server {
