@@ -91,6 +91,7 @@ services:
     volumes:
       - wp-files:/var/www/html
       - ./php.ini:/usr/local/etc/php/php.ini:ro
+      - ./wordpress-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     environment:
       - EMAIL_GATEWAY_HOST={{email_gateway_host}}
       - EMAIL_GATEWAY_PORT={{email_gateway_port}}

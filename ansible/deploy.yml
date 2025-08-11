@@ -50,6 +50,7 @@
         - appsettings.json
         - php.ini
         - mariadb.cnf
+        - wordpress-fpm.conf
 
     - name: Update services
       community.docker.docker_compose_v2:
