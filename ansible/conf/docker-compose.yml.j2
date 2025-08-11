@@ -42,6 +42,7 @@ services:
       - "127.0.0.1:3306:3306"
     volumes:
       - mariadb:/var/lib/mysql
+      - ./mariadb.cnf:/etc/mysql/mariadb.conf.d/99-custom.cnf
     #  - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
     environment:
       - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/root-password
