@@ -142,14 +142,6 @@ services:
       start_interval: 5s
       interval: 1m
       timeout: 5s
-  liga-manager-ui:
-    image: robertkitzing/liga-manager-ui:next
-    restart: always
-    environment:
-      GOOGLE_MAPS_API_KEY: ""
-      IMG_PROXY_HOST: imgproxy
-    volumes:
-      - assets:/ui/browser/assets
 secrets:
   email-password:
     file: ./secrets/email-password
