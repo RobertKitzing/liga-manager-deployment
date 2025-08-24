@@ -79,8 +79,8 @@
     - name: Import GPG keys into keyring
       command: "gpg --batch --no-default-keyring --keyring {{ item.keyring }} --import {{ item.key }}"
       with_items:
-        - { key: "/tmp/docker.gpg", keyring: "/usr/share/keyrings/docker-keyring.gpg" }
-        - { key: "/tmp/datadog.gpg", keyring: "/usr/share/keyrings/datadog-archive-keyring.gpg"}
+        - { key: "/tmp/docker.gpg", keyring: "/etc/apt/keyrings/docker-keyring.gpg" }
+        - { key: "/tmp/datadog.gpg", keyring: "/etc/apt/keyrings/datadog-archive-keyring.gpg"}
 
     - name: Register apt repositories
       apt_repository:
@@ -88,9 +88,9 @@
         filename: "{{ item.filename }}"
         update_cache: false
       with_items:
-        - repo: "deb [signed-by=/usr/share/keyrings/docker-keyring.gpg] https://download.docker.com/linux/ubuntu noble stable"
+        - repo: "deb [signed-by=/etc/apt/keyrings/docker-keyring.gpg] https://download.docker.com/linux/ubuntu noble stable"
           filename: "docker"
-        - repo: "deb [signed-by=/usr/share/keyrings/datadog-archive-keyring.gpg] https://apt.vector.dev/ stable vector-0"
+        - repo: "deb [signed-by=/etc/apt/keyrings/datadog-archive-keyring.gpg] https://apt.vector.dev/ stable vector-0"
           filename: "vector"
 
     - name: Update apt cache
