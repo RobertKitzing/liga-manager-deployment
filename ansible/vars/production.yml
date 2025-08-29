@@ -27,7 +27,7 @@ domains:
 versions:
   api: "1.26.0-roadrunner"
   imgproxy: "latest"
-  mariadb: "11.4.4"
+  mariadb: "11.8"
   nginx: "1-alpine"
   redis: "8-alpine"
   ui: "latest"
