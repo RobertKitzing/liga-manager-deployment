@@ -89,6 +89,7 @@ server {
             add_header 'Access-Control-Allow-Origin' 'https://localhost';
             add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
             add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization';
+            add_header 'Access-Control-Expose-Headers' 'Content-Encoding,X-Token';
             add_header 'Access-Control-Max-Age' 60;
             add_header 'Content-Type' 'text/plain; charset=UTF-8';
             add_header 'Content-Length' 0;
@@ -99,6 +100,7 @@ server {
         add_header 'Access-Control-Allow-Origin' 'https://localhost' always;
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
         add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization' always;
+        add_header 'Access-Control-Expose-Headers' 'Content-Encoding,X-Token' always;
 
         proxy_pass http://api;
         proxy_http_version 1.1;
