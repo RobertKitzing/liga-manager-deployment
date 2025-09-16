@@ -30,7 +30,7 @@ services:
       - source: email-password
         target: email-password
     healthcheck:
-      test: [ "CMD", "docker-php-healthcheck", "http", "127.0.0.1", "8080" ]
+      test: [ "CMD", "nc", "-z", "127.0.0.1", "8080" ]
       start_period: 1m
       start_interval: 5s
       interval: 1m
