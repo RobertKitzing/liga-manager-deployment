@@ -47,7 +47,6 @@
         - docker-compose.yml
         - nginx.conf
         - nginx-ssl.conf
-        - appsettings.json
         - php.ini
         - mariadb.cnf
         - wordpress-fpm.conf
