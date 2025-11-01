@@ -3,4 +3,6 @@ user = www-data
 group = www-data
 listen = 0.0.0.0:9000
 pm = static
-pm.max_children = 2
+pm.max_children = 1
+pm.status_listen = 0.0.0.0:9001
+pm.status_path = /_status

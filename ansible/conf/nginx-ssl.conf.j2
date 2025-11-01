@@ -19,8 +19,16 @@ upstream api {
     server api:8080 max_fails=0 fail_timeout=30s;
 }
 
+upstream api_metrics {
+    server api:8081 max_fails=0 fail_timeout=30s;
+}
+
 upstream wordpress {
     server wordpress:9000 max_fails=0 fail_timeout=30s;
+}
+
+upstream wordpress_metrics {
+    server wordpress:9001 max_fails=0 fail_timeout=30s;
 }
 
 server {
@@ -126,10 +134,35 @@ server {
 
 }
 
+# Roadrunner metrics
+server {
+    listen 8081;
+    access_log off;
+    location /_metrics {
+        proxy_pass http://api_metrics;
+        proxy_http_version 1.1;
+    }
+}
+
+# Nginx metrics
 server {
     listen 8082;
+    access_log off;
     location /_status {
         stub_status;
-        access_log off;
+    }
+}
+
+# PHP-FPM metrics
+server {
+    listen 8083;
+    access_log off;
+    location /_status {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass wordpress_metrics;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
     }
 }
