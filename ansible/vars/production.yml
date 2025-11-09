@@ -30,7 +30,7 @@ versions:
   mariadb: "11.8"
   nginx: "1-alpine"
   redis: "8-alpine"
-  ui: "5.8.5"
+  ui: "5.9.1"
   wordpress: "6.8-php8.4-fpm-alpine"
 volumes:
   certs:
