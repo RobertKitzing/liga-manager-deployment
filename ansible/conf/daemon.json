@@ -1,5 +1,8 @@
 {
   "live-restore": true,
-  "log-driver": "local",
+  "log-driver": "journald",
+  "log-opts": {
+    "tag": "{{.Name}}"
+  },
   "userns-remap": "default"
 }
