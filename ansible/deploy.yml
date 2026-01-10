@@ -38,6 +38,7 @@
         - backup-wordpress.sh
         - certbot-create.sh
         - certbot-renew.sh
+        - docker-sendmail.sh
 
     - name: Update config files
       template:

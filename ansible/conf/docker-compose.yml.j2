@@ -89,11 +89,12 @@ services:
       - wp-files:/var/www/html
       - ./php.ini:/usr/local/etc/php/php.ini:ro
       - ./wordpress-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+      - ./docker-sendmail.sh:/usr/local/bin/docker-sendmail.sh:ro
     environment:
       - EMAIL_GATEWAY_HOST={{email_gateway_host}}
       - EMAIL_GATEWAY_PORT={{email_gateway_port}}
       - EMAIL_GATEWAY_USERNAME={{email_gateway_username}}
-      - EMAIL_GATEWAY_PASSWORD={{email_gateway_password}}
+      - EMAIL_GATEWAY_PASSWORD_FILE=/run/secrets/email-password
       - EMAIL_SENDER_ADDRESS={{email_sender_address}}
       - EMAIL_SENDER_NAME={{email_sender_name}}
       - WORDPRESS_DB_HOST=mariadb
@@ -102,6 +103,8 @@ services:
     secrets:
       - source: wordpress-db-password
         target: db-password
+      - source: email-password
+        target: email-password
     depends_on:
       mariadb:
         condition: service_healthy

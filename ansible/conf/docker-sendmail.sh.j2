@@ -1,0 +1,9 @@
+#!/bin/sh
+
+host=${EMAIL_GATEWAY_HOST}
+port=${EMAIL_GATEWAY_PORT}
+user=${EMAIL_GATEWAY_USERNAME}
+pass=$(cat "${EMAIL_GATEWAY_PASSWORD_FILE}")
+from=${EMAIL_SENDER_ADDRESS}
+
+exec /usr/sbin/sendmail -t -H "openssl s_client -quiet -connect ${host}:${port}" -au"${user}" -ap"${pass}" -f "${from}"
