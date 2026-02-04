@@ -25,13 +25,13 @@ domains:
     alias: www.wildeligabremen.de
   lima: manager.wildeligabremen.de
 versions:
-  api: "1.30.0-roadrunner"
+  api: "1.30.1-roadrunner"
   imgproxy: "latest"
   mariadb: "11.8"
   nginx: "1-alpine"
   redis: "8-alpine"
   ui: "5.9.1"
-  wordpress: "6.8-php8.4-fpm-alpine"
+  wordpress: "6.9-php8.4-fpm-alpine"
 volumes:
   certs:
     path: "/var/lib/docker/100000.100000/volumes/liga-manager_certs/_data"
