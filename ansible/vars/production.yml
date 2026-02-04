@@ -31,7 +31,7 @@ versions:
   nginx: "1-alpine"
   redis: "8-alpine"
   ui: "5.9.1"
-  wordpress: "6.9-php8.4-fpm-alpine"
+  wordpress: "6.9-php8.5-fpm-alpine"
 volumes:
   certs:
     path: "/var/lib/docker/100000.100000/volumes/liga-manager_certs/_data"
