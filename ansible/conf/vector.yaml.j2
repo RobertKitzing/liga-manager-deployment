@@ -10,11 +10,11 @@ sources:
       codec: "bytes"
     mode: "scheduled"
     scheduled:
-      exec_interval_secs: 30
+      exec_interval_secs: 60
 
   host_metrics:
     type: "host_metrics"
-    scrape_interval_secs: 30
+    scrape_interval_secs: 60
     collectors: [cpu, disk, filesystem, load, host, memory, network]
     filesystem:
       filesystems:
@@ -28,16 +28,19 @@ sources:
 
   roadrunner_metrics:
     type: prometheus_scrape
+    scrape_interval_secs: 60
     endpoints:
       - http://localhost:8081/_metrics
 
   nginx_metrics:
     type: nginx_metrics
+    scrape_interval_secs: 60
     endpoints:
       - http://localhost:8082/_status
 
   php_fpm_metrics:
     type: prometheus_scrape
+    scrape_interval_secs: 60
     endpoints:
       - http://localhost:8083/_status?openmetrics
 
