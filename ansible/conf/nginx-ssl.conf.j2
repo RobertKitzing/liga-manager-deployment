@@ -62,6 +62,13 @@ server {
     }
 
     location ~ \.php$ {
+        # Overload protection
+        if (-f /run/overload) {
+            add_header 'Content-Type' 'text/plain; charset=UTF-8';
+            add_header 'Retry-After' '60';
+            return 503 'Page unavailable due to server overload';
+        }
+
         try_files $uri =404;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass wordpress;
@@ -110,6 +117,13 @@ server {
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
         add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization' always;
         add_header 'Access-Control-Expose-Headers' 'Content-Encoding,X-Token' always;
+
+        # Overload protection
+        if (-f /run/overload) {
+            add_header 'Content-Type' 'application/json';
+            add_header 'Retry-After' '60';
+            return 503 '{"errors":[{"code":"ERR-OVERLOAD","message":"API unavailable due to server overload"}]}';
+        }
 
         proxy_pass http://api;
         proxy_http_version 1.1;
