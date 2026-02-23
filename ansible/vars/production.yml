@@ -24,6 +24,16 @@ domains:
     cname: wildeligabremen.de
     alias: www.wildeligabremen.de
   lima: manager.wildeligabremen.de
+error_pages:
+  - filename: "wlb-maintenance.html"
+    title: "Maintenance"
+    text: "We are currently doing maintenance. We will be back in a few minutes."
+  - filename: "wlb-overload.html"
+    title: "Overload"
+    text: "Sorry, our website is overloaded. Keep calm and come back in a few minutes."
+  - filename: "wlb-ratelimit.html"
+    title: "Too many requests"
+    text: "We received too many requests in a short time from your IP address. Please slow down and don't overload our tiny server."
 versions:
   api: "1.30.1-roadrunner"
   imgproxy: "latest"

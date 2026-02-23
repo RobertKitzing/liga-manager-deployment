@@ -1,0 +1,16 @@
+# This playbook generates fully static HTML error pages
+- hosts: localhost
+  vars_files:
+    - secrets/production.yml
+    - vars/production.yml
+
+  tasks:
+    - name: Encode logo.png to base64
+      set_fact:
+        logo: "data:image/png;base64,{{ lookup('file', 'content/logo.png') | b64encode }}"
+
+    - name: Generate static HTML from templates
+      template:
+          src: content/error.html.j2
+          dest: "content/{{ item.filename }}"
+      with_items: "{{ error_pages }}"
