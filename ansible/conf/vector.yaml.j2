@@ -32,6 +32,12 @@ sources:
     endpoints:
       - http://localhost:8081/_metrics
 
+  mariadb_metrics:
+    type: prometheus_scrape
+    scrape_interval_secs: 60
+    endpoints:
+      - http://localhost:9306/metrics
+
   nginx_metrics:
     type: nginx_metrics
     scrape_interval_secs: 60
@@ -303,6 +309,18 @@ transforms:
         del(.gauge)
       }
 
+  mariadb_metrics_parser:
+    type: "remap"
+    inputs:
+      - "mariadb_metrics"
+    source: |
+      .dt = del(.timestamp)
+      string_name = string(.name) ?? ""
+      if (ends_with(string_name, "_total") || ends_with(string_name, "_sum") || ends_with(string_name, "_counter")) && is_object(.gauge) {
+        .counter.value = del(.gauge.value)
+        del(.gauge)
+      }
+
   nginx_metrics_parser:
     type: "remap"
     inputs:
@@ -363,6 +381,7 @@ sinks:
       - "docker_metrics_parser"
       - "host_metrics"
       - "roadrunner_metrics_transform"
+      - "mariadb_metrics_parser"
       - "nginx_metrics_parser"
       - "php_fpm_metrics_transform"
     request:
