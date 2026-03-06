@@ -136,6 +136,21 @@ services:
       start_interval: 5s
       interval: 1m
       timeout: 5s
+  mariadb-exporter:
+    image: mklocke/mariadb-exporter:latest
+    restart: always
+    ports:
+      - "127.0.0.1:9306:9306"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      - MARIADB_HOST=mariadb
+      - MARIADB_USER={{db_users.exporter}}
+      - MARIADB_PASSWORD_FILE=/run/secrets/mariadb-password
+    secrets:
+      - source: exporter-db-password
+        target: mariadb-password
 secrets:
   email-password:
     file: ./secrets/email-password
@@ -147,7 +162,8 @@ secrets:
     file: ./secrets/root-db-password
   wordpress-db-password:
     file: ./secrets/wordpress-db-password
-
+  exporter-db-password:
+    file: ./secrets/exporter-db-password
 volumes:
   mariadb:
   wp-files:
