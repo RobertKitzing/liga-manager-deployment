@@ -22,6 +22,8 @@
           content: "{{ db_passwords.root }}"
         - file: wordpress-db-password
           content: "{{ db_passwords.wordpress }}"
+        - file: exporter-db-password
+          content: "{{ db_passwords.exporter }}"
 
     - name: Update setup.sql
       template:
