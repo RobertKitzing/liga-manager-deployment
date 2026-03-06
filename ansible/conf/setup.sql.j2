@@ -9,8 +9,7 @@ CREATE DATABASE IF NOT EXISTS wordpress;
 CREATE USER IF NOT EXISTS {{db_users.wordpress}}@'%' IDENTIFIED BY '{{db_passwords.wordpress}}';
 GRANT ALL PRIVILEGES ON wordpress.* TO {{db_users.wordpress}}@'%';
 
-CREATE USER IF NOT EXISTS {{db_users.readonly}}@'%' IDENTIFIED BY '{{db_passwords.readonly}}';
-GRANT SELECT ON lima.* TO {{db_users.readonly}}@'%';
-GRANT SELECT ON wordpress.* TO {{db_users.readonly}}@'%';
+CREATE USER {{db_users.exporter}}@'%' IDENTIFIED BY '{{db_passwords.exporter}}' WITH MAX_USER_CONNECTIONS 3;
+GRANT SELECT, PROCESS, REPLICATION CLIENT ON *.* TO 'exporter'@'%';
 
 FLUSH PRIVILEGES;
