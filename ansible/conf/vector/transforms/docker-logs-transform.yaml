@@ -1,0 +1,115 @@
+type: "remap"
+inputs:
+  - "docker-logs"
+source: |
+  del(.source_type)
+  .dt = del(.timestamp)
+  .docker = del(.)
+  .dt = del(.docker.dt)
+  .message = del(.docker.message)
+  .platform = "Docker"
+  
+  .nginx = parse_regex(.message, r'^\s*(-|(?P<client>\S+))\s+(-|(?P<remote_user>\S+))\s+(-|(?P<user>\S+))\s+\[(?P<timestamp>.+)\]\s+"(?P<request>-\s+-|(?P<method>\w+)\s+(?P<path>\S+)\s+(?P<protocol>\S+))"\s+(?P<status>\d+)\s+(?P<size>\d+)\s+"(-?|(?P<referrer>.+))"\s+"(-?|(?P<agent>.+))"\s*') ??
+      parse_regex(.message, r'^\s*(?P<timestamp>.+)\s+\[(?P<severity>\w+)\]\s+(?P<pid>\d+)\#(?P<tid>\d+):\s+\*(?P<cid>\d+)\s+(?P<message>.*)(?:,\s+client:\s+(?P<client>[^,z]+))(?:,\s+server:\s+(?P<server>[^,z]+))(?:,\s+request:\s+"(?P<request>[^"]+)")(?:,\s+subrequest:\s+"(?P<subrequest>[^"]+)")?(?:,\s+upstream:\s+"(?P<upstream>[^"]+)")?(?:,\s+host:\s+"(?P<host>[^"]+)")(?:,\s+referrer:\s+"(?P<referrer>[^"]+)")?\s*') ??
+      parse_nginx_log(.message, format: "combined") ??
+      parse_nginx_log(.message, format: "error") ??
+      {}
+  
+  if .nginx != {} {
+    .service = "Nginx"
+    .level = del(.nginx.severity)
+    .message = del(.nginx.message)
+  
+    if is_null(.message) { del(.message) }
+    if exists(.nginx.timestamp) {
+      .dt = format_timestamp!(
+        parse_timestamp(.nginx.timestamp, "%d/%b/%Y:%T %z") ??
+          parse_timestamp(.nginx.timestamp, "%Y/%m/%d %T") ??
+          .dt,
+        "%+"
+      )
+  
+      del(.nginx.timestamp)
+    }
+  
+    if is_string(.nginx.status) { .nginx.status = to_int(.nginx.status) ?? .nginx.status }
+    if is_string(.nginx.size) { .nginx.size = to_int(.nginx.size) ?? .nginx.size }
+    if is_string(.nginx.cid) { .nginx.cid = to_int(.nginx.cid) ?? .nginx.cid }
+    if is_string(.nginx.pid) { .nginx.pid = to_int(.nginx.pid) ?? .nginx.pid }
+    if is_string(.nginx.tid) { .nginx.tid = to_int(.nginx.tid) ?? .nginx.tid }
+  
+    if is_null(.nginx.remote_user) { del(.nginx.remote_user) }
+    if is_null(.nginx.user) { del(.nginx.user) }
+    if is_null(.nginx.subrequest) { del(.nginx.subrequest) }
+    if is_null(.nginx.upstream) { del(.nginx.upstream) }
+    if is_null(.nginx.referrer) { del(.nginx.referrer) }
+    if is_null(.nginx.agent) { del(.nginx.agent) }
+  } else {
+    del(.nginx)
+  }
+  
+  .mysql = parse_regex(.message, r'^(?P<dt>\d+-\d+-\d+ \d+:\d+:\d+\s*[+:\d]+)\s*\[(?P<level>\w+)\]\s*(?P<message>.*)') ?? {}
+
+  if .mysql != {} {
+    .service = "MariaDB"
+    .dt = del(.mysql.dt) 
+    .level = del(.mysql.level)
+    .message = del(.mysql.message)
+    del(.mysql)
+  } else {
+    del(.mysql)
+  }
+  
+  .redis = parse_regex(.message, r'^(?P<pid>\d+):(?P<role_char>\w)\s+(?P<dt>\d+ \w+ \d+ \d{2}:\d{2}:\d{2}.\d+) (?P<level_symbol>.) (?P<message>.*)') ??
+      parse_regex(.message, r'^(?P<pid>\d+):(?P<role>\S+) \((?P<unix_timestamp>\d+)\) (?P<message>.*)') ??
+      {}
+  
+  if .redis != {} {
+    .service = "Redis"
+    if .redis.role_char == "M" {
+      .redis.role = "master"
+    } else if .redis.role_char == "S" {
+      .redis.role = "slave"
+    } else if .redis.role_char == "C" {
+      .redis.role = "RDB/AOF writing child"
+    } else if .redis.role_char == "X" {
+      .redis.role = "sentinel"
+    }
+  
+    if .redis.level_symbol == "." {
+      .level = "debug"
+    } else if .redis.level_symbol == "-" {
+      .level = "verbose"
+    } else if .redis.level_symbol == "*" {
+      .level = "notice"
+    } else if .redis.level_symbol == "#" {
+      .level = "warning"
+    }
+  
+    .redis.pid = to_int(.redis.pid) ?? null
+  
+    if exists(.redis.dt) {
+      .dt = format_timestamp!(parse_timestamp(del(.redis.dt), "%d %b %Y %T%.f") ?? now(), "%+")
+    } else if exists(.redis.unix_timestamp) {
+      .dt = format_timestamp!(from_unix_timestamp(to_int!(del(.redis.unix_timestamp))) ?? now(), "%+")
+    }
+  
+    .message = del(.redis.message)
+
+  } else {
+    del(.redis)
+  }
+
+  .api = parse_regex(.message, r'^\[(?P<dt>\d+-\d+-\d+ \d+:\d+:\d+\s*[+:\d]+)\]\s*(?P<level>\w+):\s*(?P<message>[^{}]*)\s*(?P<context>\{.*\})?') ?? {}
+  if .api != {} {
+    .service = "API"
+    .dt = del(.api.dt)
+    .level = del(.api.level)
+    .message = del(.api.message)
+    if exists(.api.context) {
+      .context = parse_json!(del(.api.context))
+    }
+    del(.api)
+  } else {
+    del(.api)
+  }

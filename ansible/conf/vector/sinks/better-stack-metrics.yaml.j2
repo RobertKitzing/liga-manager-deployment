@@ -1,0 +1,18 @@
+type: "http"
+method: "post"
+uri: "https://in.logs.betterstack.com/metrics"
+encoding:
+  codec: "json"
+auth:
+  strategy: "bearer"
+  token: "{{ better_stack_token }}"
+inputs: 
+  - "docker-metrics-parser"
+  - "host-metrics"
+  - "roadrunner-metrics-transform"
+  - "mariadb-metrics-parser"
+  - "nginx-metrics-parser"
+  - "php-fpm-metrics-transform"
+request:
+  headers:
+    Connection: "close"

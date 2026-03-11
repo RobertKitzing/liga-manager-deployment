@@ -1,0 +1,58 @@
+- hosts: wlb-prod-ubu24
+  become: true
+  vars_files:
+    - secrets/production.yml
+    - vars/production.yml
+
+  tasks:
+    - name: Ensure config dirs
+      file:
+        path: "/etc/vector/{{ item }}"
+        state: directory
+      with_items:
+        - sources
+        - transforms
+        - sinks
+
+    - name: Configure sources
+      copy:
+        src: "conf/vector/sources/{{ item }}"
+        dest: "/etc/vector/sources/{{ item }}"
+      with_items:
+        - docker-logs.yaml
+        - docker-metrics.yaml
+        - host-metrics.yaml
+        - mariadb-metrics.yaml
+        - nginx-metrics.yaml
+        - php-fpm-metrics.yaml
+        - roadrunner-metrics.yaml
+        - ssh-logs.yaml
+    
+    - name: Configure transforms
+      copy:
+        src: "conf/vector/transforms/{{ item }}"
+        dest: "/etc/vector/transforms/{{ item }}"
+      with_items:
+        - docker-logs-transform.yaml
+        - docker-metrics-transform.yaml
+        - mariadb-metrics-transform.yaml
+        - nginx-metrics-transform.yaml
+        - php-fpm-metrics-transform.yaml
+        - roadrunner-metrics-transform.yaml
+        - ssh-logs-transform.yaml
+    
+    - name: Configure sinks
+      template:
+        src: "conf/vector/sinks/{{ item }}.j2"
+        dest: "/etc/vector/sinks/{{ item }}"
+      with_items:
+        - better-stack-logs.yaml
+        - better-stack-metrics.yaml
+
+    - name: Configure main
+      copy:
+        src: "conf/vector/vector.yaml"
+        dest: "/etc/vector/vector.yaml"
+      
+    - name: Validate config
+      command: vector validate --config-dir /etc/vector

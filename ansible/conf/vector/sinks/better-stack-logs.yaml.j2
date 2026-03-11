@@ -1,0 +1,14 @@
+type: "http"
+method: "post"
+uri: "https://in.logs.betterstack.com/"
+encoding:
+  codec: "json"
+auth:
+  strategy: "bearer"
+  token: "{{ better_stack_token }}"
+inputs: 
+  - "docker-logs-parser"
+  - "ssh-logs-transform"
+request:
+  headers:
+    Connection: "close"

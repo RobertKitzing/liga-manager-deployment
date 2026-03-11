@@ -1,0 +1,7 @@
+type: "remap"
+inputs:
+  - "ssh-logs"
+source: |
+  del(.source_type)
+  .dt = del(.timestamp)
+  .service = "SSH"

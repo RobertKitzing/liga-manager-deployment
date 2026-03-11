@@ -1,0 +1,12 @@
+type: "host_metrics"
+scrape_interval_secs: 60
+collectors: [cpu, cgroups, disk, filesystem, load, host, memory, network]
+filesystem:
+  filesystems:
+    includes:
+      - "ext4"
+      - "vfat"
+    excludes:
+      - "overlay"
+      - "nsfs"
+      - "binfmt_misc"

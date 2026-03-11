@@ -1,0 +1,10 @@
+type: "remap"
+inputs:
+  - "mariadb-metrics"
+source: |
+  .dt = del(.timestamp)
+  string_name = string(.name) ?? ""
+  if (ends_with(string_name, "_total") || ends_with(string_name, "_sum") || ends_with(string_name, "_counter")) && is_object(.gauge) {
+    .counter.value = del(.gauge.value)
+    del(.gauge)
+  }

@@ -1,0 +1,6 @@
+type: "remap"
+inputs:
+  - "nginx-metrics"
+source: |
+  del(.source_type)
+  .dt = del(.timestamp)
