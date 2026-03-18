@@ -70,3 +70,4 @@
         - wordpress
         - imgproxy
         - nginx
+        - mariadb-exporter
