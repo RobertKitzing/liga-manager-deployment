@@ -1,7 +1,8 @@
 # This playbook performs a complete deployment
 # It will rewrite configuration for all services and recreate all containers if its image or config has been updated
 # This will come with be a short downtime
-- hosts: wlb-prod-ubu24
+- name: Deploy containers
+  hosts: wlb-prod-ubu24
   vars_files:
     - secrets/production.yml
     - vars/production.yml
@@ -11,6 +12,7 @@
       copy:
         content: "{{ item.content }}"
         dest: "{{ app_basedir }}/secrets/{{ item.file }}"
+        mode: '0644'
       with_items:
         - file: email-password
           content: "{{ email_gateway_password }}"
@@ -29,6 +31,7 @@
       template:
         src: conf/setup.sql.j2
         dest: "{{ app_basedir }}/setup.sql"
+        mode: '0644'
 
     - name: Update utility scripts
       template:
@@ -46,6 +49,7 @@
       template:
         src: "conf/{{ item }}.j2"
         dest: "{{ app_basedir }}/{{ item }}"
+        mode: '0644'
       with_items:
         - docker-compose.yml
         - nginx.conf
