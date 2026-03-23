@@ -151,6 +151,12 @@ services:
     secrets:
       - source: exporter-db-password
         target: mariadb-password
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "127.0.0.1", "9306" ]
+      start_period: 1m
+      start_interval: 5s
+      interval: 1m
+      timeout: 5s
 secrets:
   email-password:
     file: ./secrets/email-password
