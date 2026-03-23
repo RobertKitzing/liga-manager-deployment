@@ -1,4 +1,4 @@
 type: nginx_metrics
 scrape_interval_secs: 60
 endpoints:
-  - http://localhost:8082/_status
+  - http://localhost:8081/_metrics/nginx

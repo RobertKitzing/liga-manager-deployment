@@ -149,35 +149,23 @@ server {
 
 }
 
-# Roadrunner metrics
+# Internal metrics
 server {
     listen 8081;
     access_log off;
-    location /_metrics {
+    location /_metrics/api {
         proxy_pass http://api_metrics;
         proxy_http_version 1.1;
     }
-}
-
-# Nginx metrics
-server {
-    listen 8082;
-    access_log off;
-    location /_status {
+    location /_metrics/nginx {
         stub_status;
     }
-}
-
-# PHP-FPM metrics
-server {
-    listen 8083;
-    access_log off;
-    location /_status {
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass wordpress_metrics;
-        fastcgi_index index.php;
+    location /_metrics/wordpress {
         include fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param SCRIPT_NAME /_status;
+        fastcgi_param SCRIPT_FILENAME /_status;
+        fastcgi_param QUERY_STRING "openmetrics";
+        fastcgi_index index.php;
+        fastcgi_pass wordpress_metrics;
     }
 }

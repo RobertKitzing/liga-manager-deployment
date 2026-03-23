@@ -1,4 +1,4 @@
 type: prometheus_scrape
 scrape_interval_secs: 60
 endpoints:
-  - http://localhost:8081/_metrics
+  - http://localhost:8081/_metrics/api
