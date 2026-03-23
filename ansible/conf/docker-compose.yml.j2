@@ -61,8 +61,6 @@ services:
       - "443:443/tcp"
       - "443:443/udp"
       - "127.0.0.1:8081:8081/tcp"
-      - "127.0.0.1:8082:8082/tcp"
-      - "127.0.0.1:8083:8083/tcp"
     volumes:
       - ./nginx-ssl.conf:/etc/nginx/conf.d/default.conf:ro
       - certs:/etc/letsencrypt
