@@ -35,7 +35,7 @@ error_pages:
     title: "Too many requests"
     text: "We received too many requests in a short time from your IP address. Please slow down and don't overload our tiny server."
 versions:
-  api: "1.31.0-roadrunner"
+  api: "1.31.1-roadrunner"
   imgproxy: "latest"
   mariadb: "11.8"
   nginx: "1-alpine"
