@@ -35,12 +35,12 @@ error_pages:
     title: "Too many requests"
     text: "We received too many requests in a short time from your IP address. Please slow down and don't overload our tiny server."
 versions:
-  api: "1.31.2-roadrunner"
+  api: "1.31.3-roadrunner"
   imgproxy: "latest"
   mariadb: "11.8"
   nginx: "1-alpine"
   redis: "8-alpine"
-  ui: "5.9.1"
+  ui: "5.10.0"
   wordpress: "6.9-php8.5-fpm-alpine"
 volumes:
   certs:
