@@ -9,7 +9,7 @@ authorized_keys:
     key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJss4TEybeZF4EkQg6qDABkG69Nsj8LGO0J0N5L6gEfe mklocke@maxcluster.de"
   - user: robert
     key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC06Fp366uT3Y/eLYKH2tcWb+or06lU0iKxYtmDuWFvmMjEoWU2/OQ4u84mrpspLCWmbhc4CjcFbeQ8rTXEwzxKjsq9uf6TZ/f1OXJUFCnDe+mCdgXdZ5deOAKdWEU9T0o2zwKvtoU4x5jQTrBEjPmQG2zGby+wf3zPhuGOTZqVSXjJm/AvCaSVST2PMpHXSahLmT30PmZD/qId97DdjEaoXjL4wHNs14Q2LeTNAuSu9XnjqejVNAsRaHWfOdK0EgPGt9XhNUBqtEieWGuSS5fXTKHe6hwJxgW489FbSEuVVw2te91gH5T56uXmD3xRZyqfJWSkuVbUxFzMztGZD5bcd51ZhhcvW44CPEfnnkIK7YN5jdusTXAZAVBW8fbA3Fw+mGDG8ND+P4nx1En1R5euvoW2Eo5PFgcz5GJSmEm68QHytwM3BVLe8KHbc1oA/VFCSfJE+WCf1AvmgfXVi+EcRW1NCTGfXQAHFPRjQBnfLo7HhGQQdLSz3nrtdmWIHPc= rkitz@robert-yoga6"
-backup_directory: "/opt/liga-manager/backups"
+backup_directory: "/var/local/backups"
 db_users:
   exporter: exporter
   lima: lima

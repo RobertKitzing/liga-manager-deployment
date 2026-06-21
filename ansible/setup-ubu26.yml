@@ -1,0 +1,138 @@
+# This playbook contains setup steps to be applied on new servers
+- hosts: wlb-prod-ubu26
+  become: true
+  vars_files:
+    - vars/production.yml
+
+  tasks:
+    - name: Make sure we have a 'docker' group
+      group:
+        name: docker
+        state: present
+
+    - name: Configure admin users
+      user:
+        name: "{{ item }}"
+        shell: /bin/bash
+        groups: docker,sudo
+        append: yes
+      with_items: "{{ admin_users }}"
+
+    - name: Configure authorized keys for SSH
+      authorized_key:
+        user: "{{ item.user }}"
+        key: "{{ item.key }}"
+        state: present
+      with_items: "{{ authorized_keys }}"
+
+    - name: Enable sudo without using password for sudo group
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%sudo'
+        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Disable password authentication for root in sshd config
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: '^#?PermitRootLogin'
+        line: 'PermitRootLogin prohibit-password'
+
+    - name: Ensure docker config dir exists
+      file:
+        path: /etc/docker
+        state: directory
+
+    - name: Copy docker daemon.json
+      copy:
+        src: "conf/daemon.json"
+        dest: "/etc/docker/daemon.json"
+
+    - name: Configure sub user IDs
+      copy:
+        content: "dockremap:100000:65536"
+        dest: "/etc/subuid"
+
+    - name: Configure sub group IDs
+      copy:
+        content: "dockremap:100000:65536"
+        dest: "/etc/subgid"
+
+    - name: Download GPG keys for apt repositories
+      get_url:
+        url: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      with_items:
+        - { src: "https://download.docker.com/linux/ubuntu/gpg", dest: "/etc/apt/keyrings/docker.asc" }
+        - { src: "https://keys.datadoghq.com/DATADOG_APT_KEY_CURRENT.public", dest: "/etc/apt/keyrings/vector.asc" }
+
+    - name: Register apt repositories
+      deb822_repository:
+        name: "{{ item.name }}"
+        types: deb
+        uris: "{{ item.uri }}"
+        suites: "{{ item.suite }}"
+        components: "{{ item.components }}"
+        signed_by: "{{ item.keypath }}"
+      with_items:
+        - name: "docker"
+          uri: "https://download.docker.com/linux/ubuntu"
+          suite: "resolute"
+          components: "stable"
+          keypath: "/etc/apt/keyrings/docker.asc"
+        - name: "vector"
+          uri: "https://apt.vector.dev/"
+          suite: "stable"
+          components: "vector-0"
+          keypath: "/etc/apt/keyrings/vector.asc"
+
+    - name: Update apt cache
+      apt: update_cache=yes
+
+    - name: Update all packages to the latest version
+      apt:
+        upgrade: dist
+
+    - name: Install packages
+      apt:
+        pkg:
+          - containerd.io
+          - curl
+          - docker-ce
+          - docker-ce-cli
+          - docker-compose-plugin
+          - vector
+          - vim
+        state: latest
+
+    - name: Install cronjobs
+      cron:
+        name: "{{ item.name }}"
+        minute: "{{ item.minute }}"
+        hour: "{{ item.hour }}"
+        user: "{{ item.user }}"
+        job: "{{ item.job }}"
+        cron_file: "{{ item.name }}"
+      with_items:
+        - name: backup-lima
+          minute: "5"
+          hour: "4"
+          user: root
+          job: "cd /usr/local/etc && backup-lima create 2>&1 | logger -t backup-lima"
+        - name: backup-wordpress
+          minute: "15"
+          hour: "4"
+          user: root
+          job: "cd /usr/local/etc && backup-wordpress create 2>&1 | logger -t backup-wordpress"
+        - name: certbot-renew
+          minute: "25"
+          hour: "4"
+          user: root
+          job: "cd /usr/local/etc && certbot-renew 2>&1 | logger -t certbot-renew"
+        - name: wordpress-cron
+          minute: "*/5"
+          hour: "*"
+          user: root
+          job: "cd /usr/local/etc && docker compose exec -u www-data wordpress php wp-cron.php 2>&1 | logger -t wordpress-cron"
