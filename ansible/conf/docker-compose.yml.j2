@@ -40,8 +40,8 @@ services:
       - "127.0.0.1:3306:3306"
     volumes:
       - mariadb:/var/lib/mysql
-      - ./mariadb.cnf:/etc/mysql/mariadb.conf.d/99-custom.cnf
-    #  - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
+      - /usr/local/etc/mariadb.cnf:/etc/mysql/mariadb.conf.d/99-custom.cnf
+    #  - /usr/local/etc/setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
     environment:
       - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/root-password
     secrets:
@@ -62,7 +62,7 @@ services:
       - "443:443/udp"
       - "127.0.0.1:8081:8081/tcp"
     volumes:
-      - ./nginx-ssl.conf:/etc/nginx/conf.d/default.conf:ro
+      - /usr/local/etc/nginx-ssl.conf:/etc/nginx/conf.d/default.conf:ro
       - certs:/etc/letsencrypt
       - wp-files:/var/www/html
     depends_on:
@@ -85,9 +85,9 @@ services:
     restart: always
     volumes:
       - wp-files:/var/www/html
-      - ./php.ini:/usr/local/etc/php/php.ini:ro
-      - ./wordpress-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:ro
-      - ./docker-sendmail.sh:/usr/local/bin/docker-sendmail.sh:ro
+      - /usr/local/etc/php.ini:/usr/local/etc/php/php.ini:ro
+      - /usr/local/etc/wordpress-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+      - /usr/local/bin/docker-sendmail:/usr/local/bin/docker-sendmail.sh:ro
     environment:
       - EMAIL_GATEWAY_HOST={{email_gateway_host}}
       - EMAIL_GATEWAY_PORT={{email_gateway_port}}
@@ -157,17 +157,17 @@ services:
       timeout: 5s
 secrets:
   email-password:
-    file: ./secrets/email-password
+    file: /usr/local/secrets/email-password
   jwt-secret:
-    file: ./secrets/jwt-secret
+    file: /usr/local/secrets/jwt-secret
   lima-db-password:
-    file: ./secrets/lima-db-password
+    file: /usr/local/secrets/lima-db-password
   root-db-password:
-    file: ./secrets/root-db-password
+    file: /usr/local/secrets/root-db-password
   wordpress-db-password:
-    file: ./secrets/wordpress-db-password
+    file: /usr/local/secrets/wordpress-db-password
   exporter-db-password:
-    file: ./secrets/exporter-db-password
+    file: /usr/local/secrets/exporter-db-password
 volumes:
   mariadb:
   wp-files:
