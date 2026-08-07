@@ -4,7 +4,6 @@ set -e
 
 RETENTION_DAYS=28
 BACKUP_DIRECTORY="{{ backup_directory }}"
-LOGOS_DIRECTORY="{{ volumes.logos.path }}"
 DB_IMPORT_BIN="mariadb"
 DB_EXPORT_BIN="mariadb-dump"
 
@@ -14,7 +13,7 @@ case $1 in
     find "$BACKUP_DIRECTORY" -mtime +$RETENTION_DAYS -type f -name 'lima-logos-*.tar.gz' -delete
     TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
     docker compose exec -T mariadb $DB_EXPORT_BIN --single-transaction lima | gzip > "$BACKUP_DIRECTORY/lima-db-$TIMESTAMP.sql.gz"
-    tar -C "$LOGOS_DIRECTORY" -czf "$BACKUP_DIRECTORY/lima-logos-$TIMESTAMP.tar.gz" "."
+    docker compose exec -T api tar -C "/var/www/logos" -czO . >"$BACKUP_DIRECTORY/lima-logos-$TIMESTAMP.tar.gz"
     echo "Backup $TIMESTAMP has been created."
     ;;
   "list")
@@ -25,7 +24,7 @@ case $1 in
   "restore")
     TIMESTAMP=$2
     zcat "$BACKUP_DIRECTORY/lima-db-$TIMESTAMP.sql.gz" | docker compose exec -T mariadb $DB_IMPORT_BIN lima
-    tar -C "$LOGOS_DIRECTORY" -xzf "$BACKUP_DIRECTORY/lima-logos-$TIMESTAMP.tar.gz"
+    docker compose exec -T api tar -C "/var/www/logos" -xzf - <"$BACKUP_DIRECTORY/lima-logos-$TIMESTAMP.tar.gz"
     echo "Backup $TIMESTAMP has been restored."
     ;;
   *)
