@@ -63,3 +63,21 @@
         - php.ini
         - mariadb.cnf
         - wordpress-fpm.conf
+
+    - name: Update services
+      community.docker.docker_compose_v2:
+        build: always
+        pull: always
+        project_src: "{{ app_basedir }}"
+        services:
+          - "{{ item }}"
+        state: present
+        wait: true
+      with_items:
+        - redis
+        - mariadb
+        - api
+        - wordpress
+        - imgproxy
+        - nginx
+        - mariadb-exporter
