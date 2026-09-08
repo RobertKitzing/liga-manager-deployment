@@ -116,6 +116,14 @@
           - python3-s3transfer
           - snapd
 
+    - name: Ensure config and backups dirs are present
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - /usr/local/etc
+        - /var/local/backups
+
     - name: Install cronjobs
       cron:
         name: "{{ item.name }}"
