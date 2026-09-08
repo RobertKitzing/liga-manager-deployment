@@ -1,5 +1,5 @@
 # This playbook contains setup steps to be applied on new servers
-- hosts: wlb-prod-ubu24
+- hosts: wlb-prod-ubu26
   become: true
   vars_files:
     - vars/production.yml
@@ -14,7 +14,7 @@
       user:
         name: "{{ item }}"
         shell: /bin/bash
-        groups: docker,sudo,admin
+        groups: docker,sudo
         append: yes
       with_items: "{{ admin_users }}"
 
@@ -31,14 +31,6 @@
         state: present
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
-        validate: 'visudo -cf %s'
-
-    - name: Enable sudo without using password for admin group
-      lineinfile:
-        path: /etc/sudoers
-        state: present
-        regexp: '^%admin'
-        line: '%admin ALL=(ALL) NOPASSWD: ALL'
         validate: 'visudo -cf %s'
 
     - name: Disable password authentication for root in sshd config
@@ -73,25 +65,28 @@
         url: "{{ item.src }}"
         dest: "{{ item.dest }}"
       with_items:
-        - { src: "https://download.docker.com/linux/ubuntu/gpg", dest: "/tmp/docker.gpg" }
-        - { src: "https://keys.datadoghq.com/DATADOG_APT_KEY_CURRENT.public", dest: "/tmp/datadog.gpg" }
-
-    - name: Import GPG keys into keyring
-      command: "gpg --batch --no-default-keyring --keyring {{ item.keyring }} --import {{ item.key }}"
-      with_items:
-        - { key: "/tmp/docker.gpg", keyring: "/etc/apt/keyrings/docker-keyring.gpg" }
-        - { key: "/tmp/datadog.gpg", keyring: "/etc/apt/keyrings/datadog-archive-keyring.gpg"}
+        - { src: "https://download.docker.com/linux/ubuntu/gpg", dest: "/etc/apt/keyrings/docker.asc" }
+        - { src: "https://keys.datadoghq.com/DATADOG_APT_KEY_CURRENT.public", dest: "/etc/apt/keyrings/vector.asc" }
 
     - name: Register apt repositories
-      apt_repository:
-        repo: "{{ item.repo }}"
-        filename: "{{ item.filename }}"
-        update_cache: false
+      deb822_repository:
+        name: "{{ item.name }}"
+        types: deb
+        uris: "{{ item.uri }}"
+        suites: "{{ item.suite }}"
+        components: "{{ item.components }}"
+        signed_by: "{{ item.keypath }}"
       with_items:
-        - repo: "deb [signed-by=/etc/apt/keyrings/docker-keyring.gpg] https://download.docker.com/linux/ubuntu noble stable"
-          filename: "docker"
-        - repo: "deb [signed-by=/etc/apt/keyrings/datadog-archive-keyring.gpg] https://apt.vector.dev/ stable vector-0"
-          filename: "vector"
+        - name: "docker"
+          uri: "https://download.docker.com/linux/ubuntu"
+          suite: "resolute"
+          components: "stable"
+          keypath: "/etc/apt/keyrings/docker.asc"
+        - name: "vector"
+          uri: "https://apt.vector.dev/"
+          suite: "stable"
+          components: "vector-0"
+          keypath: "/etc/apt/keyrings/vector.asc"
 
     - name: Update apt cache
       apt: update_cache=yes
@@ -101,18 +96,33 @@
         upgrade: dist
 
     - name: Install packages
-      apt: name={{ apt_packages }} state=latest
+      apt:
+        pkg:
+          - containerd.io
+          - curl
+          - docker-ce
+          - docker-ce-cli
+          - docker-compose-plugin
+          - vector
+          - vim
+        state: latest
 
-    - name: Ensure app dirs are present
+    - name: Remove packages
+      apt:
+        state: absent
+        pkg:
+          - python3-boto3
+          - python3-botocore
+          - python3-s3transfer
+          - snapd
+
+    - name: Ensure config and backups dirs are present
       file:
         path: "{{ item }}"
         state: directory
-        group: docker
-        mode: '2775'
       with_items:
-        - "{{ app_basedir }}"
-        - "{{ app_basedir }}/backups"
-        - "{{ app_basedir }}/secrets"
+        - /usr/local/etc
+        - /var/local/backups
 
     - name: Install cronjobs
       cron:
@@ -127,19 +137,19 @@
           minute: "5"
           hour: "4"
           user: root
-          job: "cd {{ app_basedir }} && ./backup-lima.sh create 2>&1 | logger -t backup-lima"
+          job: "cd /usr/local/etc && backup-lima create 2>&1 | logger -t backup-lima"
         - name: backup-wordpress
           minute: "15"
           hour: "4"
           user: root
-          job: "cd {{ app_basedir }} && ./backup-wordpress.sh create 2>&1 | logger -t backup-wordpress"
+          job: "cd /usr/local/etc && backup-wordpress create 2>&1 | logger -t backup-wordpress"
         - name: certbot-renew
           minute: "25"
           hour: "4"
           user: root
-          job: "cd {{ app_basedir }} && ./certbot-renew.sh 2>&1 | logger -t certbot-renew"
+          job: "cd /usr/local/etc && certbot-renew 2>&1 | logger -t certbot-renew"
         - name: wordpress-cron
           minute: "*/5"
           hour: "*"
           user: root
-          job: "cd {{ app_basedir }} && docker compose exec -u www-data wordpress php wp-cron.php 2>&1 | logger -t wordpress-cron"
+          job: "cd /usr/local/etc && docker compose exec -u www-data wordpress php wp-cron.php 2>&1 | logger -t wordpress-cron"

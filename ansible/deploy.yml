@@ -2,16 +2,22 @@
 # It will rewrite configuration for all services and recreate all containers if its image or config has been updated
 # This will come with be a short downtime
 - name: Deploy containers
-  hosts: wlb-prod-ubu24
+  hosts: wlb-prod-ubu26
   vars_files:
     - secrets/production.yml
     - vars/production.yml
 
   tasks:
+    - name: Ensure secrets directory exists
+      file:
+        path: "/usr/local/secrets"
+        state: directory
+        mode: '0755'
+
     - name: Write secrets
       copy:
         content: "{{ item.content }}"
-        dest: "{{ app_basedir }}/secrets/{{ item.file }}"
+        dest: "/usr/local/secrets/{{ item.file }}"
         mode: '0644'
       with_items:
         - file: email-password
@@ -30,25 +36,25 @@
     - name: Update setup.sql
       template:
         src: conf/setup.sql.j2
-        dest: "{{ app_basedir }}/setup.sql"
+        dest: "/usr/local/etc/setup.sql"
         mode: '0644'
 
     - name: Update utility scripts
       template:
-        src: "scripts/{{ item }}.j2"
-        dest: "{{ app_basedir }}/{{ item }}"
+        src: "scripts/{{ item }}.sh.j2"
+        dest: "/usr/local/bin/{{ item }}"
         mode: '0775'
       with_items:
-        - backup-lima.sh
-        - backup-wordpress.sh
-        - certbot-create.sh
-        - certbot-renew.sh
-        - docker-sendmail.sh
+        - backup-lima
+        - backup-wordpress
+        - certbot-create
+        - certbot-renew
+        - docker-sendmail
 
     - name: Update config files
       template:
         src: "conf/{{ item }}.j2"
-        dest: "{{ app_basedir }}/{{ item }}"
+        dest: "/usr/local/etc/{{ item }}"
         mode: '0644'
       with_items:
         - docker-compose.yml
