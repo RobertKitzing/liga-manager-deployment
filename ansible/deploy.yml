@@ -68,7 +68,8 @@
       community.docker.docker_compose_v2:
         build: always
         pull: always
-        project_src: "{{ app_basedir }}"
+        project_name: "liga-manager"
+        project_src: "/usr/local/etc"
         services:
           - "{{ item }}"
         state: present
